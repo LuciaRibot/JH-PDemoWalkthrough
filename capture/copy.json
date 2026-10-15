@@ -1,0 +1,512 @@
+{
+ "title": "JH&P AI-Embedded Client Onboarding",
+ "subtitle": "A client application taken from first login to accounts opened, across the JH&P Portal, Onboarding and Portfolio sites",
+ "order": [
+  100,
+  101,
+  102,
+  103,
+  104,
+  105,
+  106,
+  107,
+  108,
+  109,
+  110,
+  111,
+  112,
+  113,
+  150,
+  151,
+  152,
+  114,
+  115,
+  116,
+  117,
+  118,
+  119,
+  120,
+  200,
+  201,
+  202,
+  203,
+  204,
+  205,
+  206,
+  207,
+  208,
+  209,
+  210,
+  211,
+  212,
+  213,
+  214,
+  300,
+  301,
+  302,
+  303,
+  304,
+  305,
+  306,
+  307,
+  308,
+  309,
+  310,
+  311,
+  312,
+  313,
+  400,
+  401,
+  402,
+  403,
+  404,
+  405,
+  406,
+  407,
+  408,
+  410,
+  411,
+  412,
+  413,
+  414,
+  415,
+  416,
+  417,
+  418,
+  419,
+  500,
+  501,
+  503,
+  504,
+  505,
+  600,
+  700,
+  701,
+  702
+ ],
+ "copy": {
+  "100": {
+   "chapter": "The client application",
+   "persona": "rebecca",
+   "title": "Rebecca's own front door",
+   "body": "The JH&P Portal replaces the 44-page paper form. Rebecca sees her progress, her team (James and her client service executive) and exactly what happens next, in JH&P's own brand.",
+   "say": "This is the client site. Branded, mobile-ready, and every word on it is configurable by the business."
+  },
+  "101": {
+   "chapter": "The client application",
+   "title": "Pick up where she left off",
+   "body": "One button takes her into the application. Everything saves as she goes, so she can stop and come back at any time."
+  },
+  "102": {
+   "chapter": "The client application",
+   "title": "Six short sections, not 44 pages",
+   "body": "The journey is tailored to her case: herself, Edward as joint applicant, the family company, accounts, source of wealth and documents. For the demo, the wand fills each step with Rebecca's answers.",
+   "say": "In production most of this is pre-filled from Xplan and James's meeting notes."
+  },
+  "103": {
+   "chapter": "The client application",
+   "title": "Validated as she types",
+   "body": "Email, mobile, date of birth and National Insurance number are checked in the form itself, so bad data never reaches the onboarding team."
+  },
+  "104": {
+   "chapter": "The client application",
+   "title": "Tax position",
+   "body": "Nationality, tax residence and National Insurance number. A second tax residency only asks for a TIN when she says she has one."
+  },
+  "105": {
+   "chapter": "The client application",
+   "title": "Questions appear only when they apply",
+   "body": "Dynamic rules show or hide questions based on her answers, so nobody answers a question that does not apply to them."
+  },
+  "106": {
+   "chapter": "The client application",
+   "title": "Edward, the joint applicant",
+   "body": "Rebecca only gives Edward's name and email. He receives his own secure link and completes his identity section himself, in parallel."
+  },
+  "107": {
+   "chapter": "The client application",
+   "title": "Parties work in parallel",
+   "body": "Each party on the case completes only their own part. The application continues while Edward does his."
+  },
+  "108": {
+   "chapter": "The client application",
+   "title": "The family company",
+   "body": "Rebecca is a director of Ridge Holdings (UK) Ltd, so the journey adds a company section."
+  },
+  "109": {
+   "chapter": "The client application",
+   "title": "Checked against Companies House",
+   "body": "The company number is checked against Companies House and the registered details come back automatically for her to confirm."
+  },
+  "110": {
+   "chapter": "The client application",
+   "title": "People with significant control",
+   "body": "Directors and anyone owning more than a quarter of the shares are listed, each with their own status. Camilla Rose Vance is invited to verify her identity."
+  },
+  "111": {
+   "chapter": "The client application",
+   "title": "Accounts and objectives",
+   "body": "The ISA and joint General Investment Account she discussed with James, with the objective and time horizon."
+  },
+  "112": {
+   "chapter": "The client application",
+   "title": "Preferences recorded",
+   "body": "Long-term growth, ten years or more, excluding tobacco and controversial weapons: what she told James at their first meeting."
+  },
+  "113": {
+   "chapter": "The client application",
+   "title": "Where the money comes from",
+   "body": "Source of wealth: the sale of 60% of Vance Interiors Ltd. The fields change with the type of wealth she picks."
+  },
+  "150": {
+   "chapter": "The client application",
+   "title": "A question mid-form",
+   "body": "Rebecca is unsure what counts as source of wealth. Instead of emailing her client service executive, she opens the onboarding assistant.",
+   "say": "This is the client-facing in-line assistance JH&P asked for in the RFI."
+  },
+  "151": {
+   "chapter": "The client application",
+   "title": "An Appian chat agent, scoped to this section",
+   "body": "The assistant is an Appian AI agent. It knows which section she is on and answers only from JH&P's published guidance."
+  },
+  "152": {
+   "chapter": "The client application",
+   "title": "Answered, with its source",
+   "body": "Plain English, with the guidance it came from. It cannot give advice or change her answers, and one click hands the question to a person instead.",
+   "say": "Structured, safe, governed AI: grounded in your content, no advice, human handoff."
+  },
+  "114": {
+   "chapter": "The client application",
+   "title": "Source of wealth complete",
+   "body": "The sale, its date and the approximate value of £2.1m. The form tells her which document we will ask for as evidence."
+  },
+  "115": {
+   "chapter": "The client application",
+   "title": "Three of four documents already on file",
+   "body": "Passport, proof of address and the Companies House extract were collected automatically. Only one upload is needed."
+  },
+  "116": {
+   "chapter": "The client application",
+   "title": "The completion statement",
+   "body": "She uploads the completion statement from the sale. The portal checks it is the right kind of document before accepting it.",
+   "noTarget": true
+  },
+  "117": {
+   "chapter": "The client application",
+   "title": "Received, and on to signing",
+   "body": "The statement is received and sent to Appian DocCenter in the background. Rebecca does not wait: she goes straight to signing."
+  },
+  "118": {
+   "chapter": "The client application",
+   "title": "Identity checks and signatures",
+   "body": "Identity and address were already verified. Three agreements are ready to read and sign online, and Edward signs the joint mandate afterwards."
+  },
+  "119": {
+   "chapter": "The client application",
+   "title": "Sign and submit",
+   "body": "One action signs the three agreements and submits the application. It locks, and the onboarding team is told straight away."
+  },
+  "120": {
+   "chapter": "The client application",
+   "title": "Signed and submitted",
+   "body": "Every agreement shows as signed. What took weeks of paper and rekeying took one sitting, with every answer captured as structured data."
+  },
+  "200": {
+   "chapter": "The onboarding team",
+   "persona": "cse",
+   "title": "The client service executive's day",
+   "body": "The Onboarding site opens on the live queue. Hartley-Vance has just submitted, two cases are past their service target, and everything that needs a person is listed on the right."
+  },
+  "201": {
+   "chapter": "The onboarding team",
+   "title": "Ask about your cases",
+   "body": "The case assistant is collapsed until it is needed. One click opens it."
+  },
+  "202": {
+   "chapter": "The onboarding team",
+   "title": "Plain-English questions about live cases",
+   "body": "The second AI ask from the RFI: natural-language case status. The question goes to an Appian chat agent that reads a live snapshot of the case records.",
+   "say": "No report to build and no filter to set. It answers from the records as they are right now."
+  },
+  "203": {
+   "chapter": "The onboarding team",
+   "title": "Answered from the live records",
+   "body": "Carrington Trust and Ashmole Charitable Fund are past the 5-day target, and it lists what is still open on Hartley-Vance, with owners and due dates. It reads the data; it cannot change it."
+  },
+  "204": {
+   "chapter": "The onboarding team",
+   "title": "Back to the queue",
+   "body": "Hide the assistant and go to work on the new submission."
+  },
+  "205": {
+   "chapter": "The onboarding team",
+   "title": "Review the submission",
+   "body": "The new submission card opens the case straight on the Application tab."
+  },
+  "206": {
+   "chapter": "The onboarding team",
+   "title": "Everything the client gave, in one place",
+   "body": "Her answers, read-only and grouped as she saw them, beside the evidence she uploaded. Nothing has been rekeyed."
+  },
+  "207": {
+   "chapter": "The onboarding team",
+   "title": "DocCenter is already reading",
+   "body": "Appian DocCenter is extracting the completion statement with a trained model. The review task appears here when it finishes."
+  },
+  "208": {
+   "chapter": "The onboarding team",
+   "title": "The case overview",
+   "body": "The Overview shows what is outstanding on the case and who owns each item."
+  },
+  "209": {
+   "chapter": "The onboarding team",
+   "title": "What stands between the case and approval",
+   "body": "Each open item has an owner, a due date and a one-click action: the PEP match to review, Edward's section, the submission and the extracted statement."
+  },
+  "210": {
+   "chapter": "The onboarding team",
+   "title": "Xplan, Pulse, Symphony, Azure",
+   "body": "The four systems JH&P named, with the sync status of each, read from the integration log. Pulse and Symphony are written to on approval."
+  },
+  "211": {
+   "chapter": "The onboarding team",
+   "title": "Parties",
+   "body": "Every person and entity on the case."
+  },
+  "212": {
+   "chapter": "The onboarding team",
+   "title": "Multi-party onboarding",
+   "body": "Applicants, the company, its director and the accountants, each with their own screening and invite status, and a resend invite where needed."
+  },
+  "213": {
+   "chapter": "The onboarding team",
+   "title": "Documents",
+   "body": "All evidence and agreements for the case."
+  },
+  "214": {
+   "chapter": "The onboarding team",
+   "title": "Evidence, with DocCenter status",
+   "body": "Passport, proof of address and the Companies House extract on file; the completion statement awaiting review; the agreements signed."
+  },
+  "300": {
+   "chapter": "KYC and screening",
+   "title": "A possible PEP match",
+   "body": "Camilla Rose Vance, a director of the family company, has a weak 38% match against a regional councillor. Review match opens the screening check in place."
+  },
+  "301": {
+   "chapter": "KYC and screening",
+   "title": "The screening check",
+   "body": "What we send to the screening provider: name, year of birth, nationality, residence and her role on the case."
+  },
+  "302": {
+   "chapter": "KYC and screening",
+   "title": "Run the screening check",
+   "body": "One click calls the screening provider (mocked for the demo) and starts the JHP screening agent, an Appian process agent."
+  },
+  "303": {
+   "chapter": "KYC and screening",
+   "title": "The agent reviews the match",
+   "body": "The provider record comes back and the screening agent compares it with what JH&P holds, in the background."
+  },
+  "304": {
+   "chapter": "KYC and screening",
+   "title": "Logged with a reference",
+   "body": "The check is recorded with the provider's reference and time, for the audit trail."
+  },
+  "305": {
+   "chapter": "KYC and screening",
+   "title": "Identifier by identifier",
+   "body": "Name and year of birth match. Addresses (London against Edinburgh), directorships and public role all differ."
+  },
+  "306": {
+   "chapter": "KYC and screening",
+   "title": "The agent advises",
+   "body": "The screening agent recommends no match and explains why: two strong identifiers clearly differ and the score is low. Its reasoning is kept on the file.",
+   "say": "The agent advises. A person decides, and both are in the audit trail."
+  },
+  "307": {
+   "chapter": "KYC and screening",
+   "title": "A person decides",
+   "body": "The client service executive records the decision: not the same person."
+  },
+  "308": {
+   "chapter": "KYC and screening",
+   "title": "Reasoning for the file",
+   "body": "Her reasoning is required and stored with the decision."
+  },
+  "309": {
+   "chapter": "KYC and screening",
+   "title": "Confirm the comparison",
+   "body": "She confirms she has compared every identifier herself, so the decision is never a rubber stamp of the AI."
+  },
+  "310": {
+   "chapter": "KYC and screening",
+   "title": "Confirm the decision",
+   "body": "The decision is validated before it is saved."
+  },
+  "311": {
+   "chapter": "KYC and screening",
+   "title": "Four eyes, without the wait",
+   "body": "The match clears now, and the Head of Compliance is emailed for second approval. Segregation of duties without stalling the case."
+  },
+  "312": {
+   "chapter": "KYC and screening",
+   "title": "Second approval requested",
+   "body": "The request to compliance is shown on the case, with the decision, reasoning and provider reference, and logged in the integration log."
+  },
+  "313": {
+   "chapter": "KYC and screening",
+   "title": "Cleared",
+   "body": "The PEP item has moved to Done. Three items remain."
+  },
+  "400": {
+   "chapter": "Document intelligence",
+   "title": "DocCenter has finished",
+   "body": "The completion statement has been read. Reconcile in DocCenter opens the review task."
+  },
+  "401": {
+   "chapter": "Document intelligence",
+   "title": "Accept the task",
+   "body": "Review is a governed task: accepting it stops two people working the same document."
+  },
+  "402": {
+   "chapter": "Document intelligence",
+   "title": "Appian DocCenter: reconcile fields",
+   "body": "32 fields extracted from the six-page statement, each with its confidence, side by side with the document itself."
+  },
+  "403": {
+   "chapter": "Document intelligence",
+   "title": "Check, correct, highlight",
+   "body": "Any value can be corrected by highlighting it on the document. Net proceeds of £1,968,400 are what the client actually received."
+  },
+  "404": {
+   "chapter": "Document intelligence",
+   "title": "Submit the review",
+   "body": "The reviewed values are written to the case as structured data, and compared with what Rebecca declared."
+  },
+  "405": {
+   "chapter": "Document intelligence",
+   "title": "A mismatch, raised by AI",
+   "body": "Net proceeds are 6.3% below the £2.1m declared, outside the 5% tolerance set by the business, so an evidence-mismatch item is raised automatically."
+  },
+  "406": {
+   "chapter": "Document intelligence",
+   "title": "Review the evidence beside the decision",
+   "body": "The statement opens next to the decision. The gross price matches; the difference is deal fees. She accepts the evidence, or could ask the client to explain."
+  },
+  "407": {
+   "chapter": "Document intelligence",
+   "title": "A note for the file",
+   "body": "Every resolution carries a note, written to the audit trail."
+  },
+  "408": {
+   "chapter": "Document intelligence",
+   "title": "Resolved",
+   "body": "The mismatch is closed with the reason recorded."
+  },
+  "410": {
+   "chapter": "Ready for approval",
+   "title": "Edward's section",
+   "body": "Edward is travelling. The executive has confirmed with him by phone."
+  },
+  "411": {
+   "chapter": "Ready for approval",
+   "title": "How it was resolved",
+   "body": "The form fits the item: for information requests, how it was resolved."
+  },
+  "412": {
+   "chapter": "Ready for approval",
+   "title": "Recorded",
+   "body": "The note goes on the file."
+  },
+  "413": {
+   "chapter": "Ready for approval",
+   "title": "Resolve",
+   "body": "The item closes and the case moves on."
+  },
+  "414": {
+   "chapter": "Ready for approval",
+   "title": "Back to the application",
+   "body": "With the checks done, the application review can be closed."
+  },
+  "415": {
+   "chapter": "Ready for approval",
+   "title": "Mark the application reviewed",
+   "body": "Closes the review item raised when Rebecca submitted, and moves the case to Checks."
+  },
+  "416": {
+   "chapter": "Ready for approval",
+   "title": "Send for approval",
+   "body": "Guarded: the button refuses while anything blocking is still open. Now the case goes to James, with a case summary drafted by AI from the record."
+  },
+  "417": {
+   "chapter": "Ready for approval",
+   "title": "With the portfolio manager",
+   "body": "The case is with James Horniman for approval, and the summary is on the Overview."
+  },
+  "418": {
+   "chapter": "Ready for approval",
+   "title": "The audit trail",
+   "body": "Every action on the case, by the client, staff, services and AI."
+  },
+  "419": {
+   "chapter": "Ready for approval",
+   "title": "Who did what, and why",
+   "body": "Filterable by people, automated services and AI, with the detail of each entry, including the agents' reasoning."
+  },
+  "500": {
+   "chapter": "Approval and accounts opened",
+   "persona": "pm",
+   "title": "The JH&P Portfolio site",
+   "body": "A separate site for portfolio managers, in a different palette, on the same platform. James sees his pipeline and what is waiting for him."
+  },
+  "501": {
+   "chapter": "Approval and accounts opened",
+   "title": "Everything he needs on one screen",
+   "body": "The AI-drafted case summary, the client with identifiers masked for his role, and the checks before approval: identity, screening, source of wealth, parties, risk rating and segregation of duties, each worked out from the case record."
+  },
+  "502": {
+   "chapter": "Approval and accounts opened",
+   "title": "Checks computed from the record",
+   "body": "Identity, screening, source of wealth, risk rating and segregation of duties: each check is worked out from the case data, not ticked by hand."
+  },
+  "503": {
+   "chapter": "Approval and accounts opened",
+   "title": "A note for the file",
+   "body": "James records his approval note."
+  },
+  "504": {
+   "chapter": "Approval and accounts opened",
+   "title": "Approve and open accounts",
+   "body": "One approval writes back to Pulse (accounts), Symphony (portfolio) and Xplan (client status), and tells Rebecca."
+  },
+  "505": {
+   "chapter": "Approval and accounts opened",
+   "title": "Approved",
+   "body": "The case is opened, with the write-back to each system logged."
+  },
+  "600": {
+   "chapter": "Approval and accounts opened",
+   "persona": "rebecca",
+   "title": "Rebecca sees it straight away",
+   "body": "Her portal shows the accounts open, with a message from her team. No chasing, no post."
+  },
+  "700": {
+   "chapter": "Reporting and configuration",
+   "persona": "cse",
+   "title": "Onboarding MI, live",
+   "body": "Open and late cases, time to open, straight-through document rate, answers pre-filled and AI actions, computed from the case records."
+  },
+  "701": {
+   "chapter": "Reporting and configuration",
+   "title": "Where work waits, and where AI is used",
+   "body": "Cases by stage, what open cases are waiting on, back-office sync health, and every place AI is used and checked."
+  },
+  "702": {
+   "chapter": "Reporting and configuration",
+   "title": "Changed by the business, with no release",
+   "body": "Guidance, tooltips, dropdown options, required fields, service levels and risk weights are edited here and apply immediately. Journeys and integrations change in Appian Designer, through release approval.",
+   "say": "Low-code JH&P can maintain themselves."
+  }
+ }
+}

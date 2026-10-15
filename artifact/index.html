@@ -1,0 +1,602 @@
+<title>JH&amp;P Onboarding Walkthrough</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700;900&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+
+<style>
+/* Layout: the screenshot is the stage, held at the capture's own 16:10 and
+   centred under a slim bar. The dim mask, hotspot and tooltip are positioned
+   inside that frame in capture percentages, so they stay locked to the pixels
+   they were measured against at any screen size. Chapter nav slides in. */
+:root {
+  --paper:#F2ECE7; --surface:#FFFFFF; --sunk:#E8E0D9;
+  --ink:#1F2437; --muted:#6B6670; --line:#DCD3CB;
+  --brand:#4C1E35; --brand-deep:#24294F; --on-brand:#FFFFFF;
+  --mask:rgba(22,19,20,.17);
+  --client:#0B6E5A; --tmf:#4C1E35; --admin:#24294F;
+  --ok:#117C00;
+  --display:'Lato', 'Helvetica Neue', Arial, sans-serif;
+  --body:'IBM Plex Sans', system-ui, -apple-system, Segoe UI, sans-serif;
+  --mono:'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+  --bar:54px;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --paper:#131519; --surface:#1C1F24; --sunk:#262A30;
+    --ink:#F0EDEA; --muted:#9C958F; --line:#2F343B;
+    --brand:#D9A5BE; --brand-deep:#A5847F; --on-brand:#1A0F14;
+    --mask:rgba(6,7,9,.26);
+    --client:#5FC2AA; --tmf:#D9A5BE; --admin:#9AA6D6;
+    --ok:#4ADE80;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --paper:#131519; --surface:#1C1F24; --sunk:#262A30;
+  --ink:#F0EDEA; --muted:#9C958F; --line:#2F343B;
+  --brand:#D9A5BE; --brand-deep:#A5847F; --on-brand:#1A0F14;
+  --mask:rgba(6,7,9,.26);
+  --client:#5FC2AA; --tmf:#D9A5BE; --admin:#9AA6D6;
+  --ok:#4ADE80;
+  color-scheme: dark;
+}
+
+/* The publish skeleton supplies this, a standalone deploy does not — and
+   .sheet{display:grid} outranks the browser default, so a hidden cover or end
+   screen would stay on top and swallow every click. */
+[hidden] { display: none !important; }
+
+* { box-sizing: border-box; }
+html, body { height: 100%; }
+body {
+  margin: 0; background: var(--paper); color: var(--ink);
+  font-family: var(--body); font-size: 15px; line-height: 1.5;
+  overflow: hidden;
+}
+button { font: inherit; color: inherit; cursor: pointer; }
+:focus-visible { outline: 2.5px solid var(--brand); outline-offset: 2px; border-radius: 3px; }
+
+/* ----------------------------------------------------------- top bar */
+.bar {
+  position: fixed; inset: 0 0 auto 0; height: var(--bar);
+  padding: 0 14px; padding-top: env(safe-area-inset-top, 0px);
+  display: flex; align-items: center; gap: 12px;
+  background: color-mix(in srgb, var(--surface) 92%, transparent);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--line); z-index: 40;
+}
+.mark {
+  font-family: var(--display); font-weight: 800; font-size: 13px; letter-spacing: .14em;
+  background: var(--brand); color: var(--on-brand); padding: 5px 7px; border-radius: 3px;
+  flex: none;
+}
+.where { min-width: 0; display: flex; flex-direction: column; justify-content: center; }
+.where b {
+  font-family: var(--display); font-weight: 700; font-size: 14px; line-height: 1.15;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.where span {
+  font-family: var(--mono); font-size: 10.5px; letter-spacing: .08em; text-transform: uppercase;
+  color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.spacer { flex: 1 1 auto; }
+.count {
+  font-family: var(--mono); font-size: 12px; font-variant-numeric: tabular-nums;
+  color: var(--muted); flex: none;
+}
+.btn {
+  border: 1px solid var(--line); background: var(--surface); color: var(--ink);
+  border-radius: 6px; height: 32px; padding: 0 11px; font-size: 13px; font-weight: 500;
+  display: inline-flex; align-items: center; gap: 6px; flex: none;
+}
+.btn:hover { border-color: var(--brand); color: var(--brand); }
+.btn[aria-pressed="true"] { background: var(--sunk); }
+.btn.icon { width: 32px; padding: 0; justify-content: center; font-size: 15px; }
+
+.progress { position: fixed; top: 0; left: 0; height: 2px; background: var(--brand); z-index: 50; transition: width .28s ease; }
+
+/* ----------------------------------------------------------- stage */
+.stage {
+  position: absolute; inset: calc(var(--bar) + env(safe-area-inset-top, 0px)) 0 0 0;
+  display: grid; place-items: center; padding: 18px;
+}
+/* The frame shrink-wraps the image instead of forcing its own aspect ratio.
+   With a fixed aspect-ratio plus object-fit:cover the browser cropped the
+   screenshot whenever the box and the image disagreed even slightly, and the
+   hotspot percentages — which are measured against the image — stopped
+   landing on the pixels they were measured from. Letting the image size
+   itself keeps 1% of the frame equal to 1% of the capture. */
+.frame {
+  position: relative; line-height: 0;
+  max-width: 100%; max-height: 100%;
+  border-radius: 10px; overflow: hidden;
+  background: var(--sunk);
+  box-shadow: 0 18px 50px rgba(0,0,0,.22), 0 0 0 1px var(--line);
+}
+.frame img {
+  display: block; width: auto; height: auto;
+  max-width: 100%; max-height: 100%;
+}
+
+/* The dim: one transparent box with an enormous shadow, so the cutout is the
+   only lit area. No second element and no SVG mask to keep in sync. */
+.spot {
+  position: absolute; border-radius: 7px; pointer-events: none;
+  box-shadow: 0 0 0 100vmax var(--mask);
+  outline: 3px solid var(--brand); outline-offset: 2px;
+  transition: all .3s cubic-bezier(.4,0,.2,1);
+}
+/* Focus off: keep the ring and the pulse, drop the dim entirely. */
+body.nodim .spot { box-shadow: none; }
+/* Narration steps point without dimming. Only a step that asks for a click or
+   a keystroke needs the rest of the screen pushed back; a step that is talking
+   about the screen needs the screen. Dimming those was what made the whole
+   walkthrough read as blacked out. */
+.spot.point { box-shadow: none; }
+
+.hot {
+  position: absolute; border: 0; background: transparent; padding: 0;
+  border-radius: 7px; z-index: 3; cursor: pointer;
+  transition: all .3s cubic-bezier(.4,0,.2,1);
+}
+.hot::after {
+  content: ''; position: absolute; inset: -5px; border-radius: 10px;
+  border: 2.5px solid var(--brand); animation: pulse 1.9s ease-out infinite;
+}
+@keyframes pulse {
+  0%   { transform: scale(1);    opacity: .95; }
+  70%  { transform: scale(1.14); opacity: 0; }
+  100% { transform: scale(1.14); opacity: 0; }
+}
+
+/* ----------------------------------------------------------- tooltip */
+.tip {
+  position: absolute; z-index: 6; width: min(330px, 62%);
+  background: var(--surface); color: var(--ink);
+  border: 1px solid var(--line); border-radius: 10px;
+  box-shadow: 0 14px 40px rgba(0,0,0,.3);
+  padding: 15px 16px 14px;
+  transition: top .3s cubic-bezier(.4,0,.2,1), left .3s cubic-bezier(.4,0,.2,1);
+}
+.tip.card {
+  /* Caption beat: no target to point at. Sit in the lower third rather than
+     dead centre, so the screen being described stays readable behind it. */
+  position: absolute; left: 24px; right: auto; bottom: 24px; top: auto; transform: none;
+  width: min(460px, 60%); padding: 18px 20px;
+}
+.eyebrow {
+  font-family: var(--mono); font-size: 10px; letter-spacing: .13em; text-transform: uppercase;
+  color: var(--muted); display: flex; align-items: center; gap: 8px; margin-bottom: 7px;
+}
+.who { font-weight: 600; }
+.who[data-p="rebecca"] { color: var(--client); }
+.who[data-p="cse"] { color: var(--tmf); }
+.who[data-p="pm"] { color: var(--admin); }
+.tip h2 {
+  font-family: var(--display); font-weight: 700; font-size: 17px; line-height: 1.25;
+  margin: 0 0 6px; text-wrap: balance;
+}
+.tip.card h2 { font-size: 19px; }
+.tip p { margin: 0; font-size: 13.5px; line-height: 1.52; color: var(--ink); }
+.tip.card p { font-size: 14px; }
+.say {
+  margin-top: 11px; padding: 9px 11px; border-radius: 7px;
+  background: var(--sunk); border-left: 3px solid var(--brand);
+  font-size: 12.5px; line-height: 1.45; color: var(--ink);
+}
+.say b {
+  display: block; font-family: var(--mono); font-size: 9.5px; letter-spacing: .13em;
+  text-transform: uppercase; color: var(--muted); margin-bottom: 3px; font-weight: 500;
+}
+.tipnav { display: flex; align-items: center; gap: 8px; margin-top: 13px; }
+.next {
+  background: var(--brand); color: var(--on-brand); border: 0; border-radius: 6px;
+  height: 32px; padding: 0 13px; font-weight: 600; font-size: 13px;
+}
+.next:hover { background: var(--brand-deep); }
+.hint { font-family: var(--mono); font-size: 10.5px; color: var(--muted); }
+body.nopanel .tip { opacity: 0; pointer-events: none; }
+
+/* ----------------------------------------------------------- chapters */
+.rail {
+  position: fixed; top: calc(var(--bar) + env(safe-area-inset-top, 0px)); bottom: 0; left: 0;
+  width: 290px; max-width: 84vw; z-index: 45;
+  background: var(--surface); border-right: 1px solid var(--line);
+  padding: 14px; overflow-y: auto;
+  transform: translateX(-102%); transition: transform .26s ease;
+}
+.rail[data-open="true"] { transform: none; }
+.rail h3 {
+  font-family: var(--mono); font-size: 10px; letter-spacing: .14em; text-transform: uppercase;
+  color: var(--muted); margin: 0 0 10px; font-weight: 500;
+}
+.chap {
+  display: flex; gap: 11px; align-items: baseline; width: 100%; text-align: left;
+  background: none; border: 0; border-radius: 7px; padding: 9px 10px; margin-bottom: 2px;
+}
+.chap:hover { background: var(--sunk); }
+.chap[aria-current="true"] { background: var(--sunk); }
+.chap[aria-current="true"] .cn { color: var(--brand); }
+.cn { font-family: var(--mono); font-size: 11px; color: var(--muted); flex: none; width: 18px; font-variant-numeric: tabular-nums; }
+.ct { font-size: 13.5px; font-weight: 500; line-height: 1.3; }
+.cc { font-family: var(--mono); font-size: 10.5px; color: var(--muted); margin-left: auto; flex: none; }
+
+/* ----------------------------------------------------------- overlays */
+.sheet {
+  position: fixed; inset: 0; z-index: 60; background: var(--paper);
+  display: grid; place-items: center; padding: 28px 20px;
+  overflow-y: auto;
+}
+.sheetin { width: min(760px, 100%); }
+.kicker {
+  font-family: var(--mono); font-size: 11px; letter-spacing: .18em; text-transform: uppercase;
+  color: var(--brand); margin-bottom: 14px;
+}
+.sheet h1 {
+  font-family: var(--display); font-weight: 800; font-size: clamp(30px, 6vw, 52px);
+  line-height: 1.02; margin: 0 0 12px; letter-spacing: -.02em; text-wrap: balance;
+}
+.lede { font-size: clamp(15px, 2.2vw, 18px); color: var(--muted); margin: 0 0 24px; max-width: 54ch; }
+.toc { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 1px; background: var(--line); border: 1px solid var(--line); border-radius: 9px; overflow: hidden; margin-bottom: 26px; }
+.toc div { background: var(--surface); padding: 11px 13px; }
+.toc b { display: block; font-size: 13px; font-weight: 600; }
+.toc span { font-family: var(--mono); font-size: 10.5px; color: var(--muted); }
+.cta {
+  background: var(--brand); color: var(--on-brand); border: 0; border-radius: 8px;
+  height: 46px; padding: 0 24px; font-weight: 700; font-size: 15px;
+  font-family: var(--display); letter-spacing: .01em;
+}
+.cta:hover { background: var(--brand-deep); }
+.meta { margin-top: 18px; font-family: var(--mono); font-size: 11px; color: var(--muted); line-height: 1.7; }
+
+@media (max-width: 760px) {
+  :root { --bar: 50px; }
+  /* The tooltip docks over the bottom of the screen, so reserve that space
+     and centre the frame in what is left rather than stranding it at the top. */
+  .stage { padding: 10px 10px 44svh; align-content: center; }
+  .frame { border-radius: 7px; }
+  /* The tooltip stops chasing the hotspot and docks, so it never covers it. */
+  .tip, .tip.card {
+    position: fixed; left: 0; right: 0; bottom: 0; top: auto; transform: none;
+    width: 100%; max-width: 100%; border-radius: 13px 13px 0 0;
+    border-left: 0; border-right: 0; border-bottom: 0;
+    padding: 14px 16px calc(14px + env(safe-area-inset-bottom, 0px));
+    max-height: 56svh; overflow-y: auto;
+  }
+  .where span { display: none; }
+  /* Seven controls do not fit across a phone. The presenter toggles are for
+     whoever is driving on a laptop, so drop them here and keep the row from
+     running off the right edge. */
+  .bar { gap: 8px; padding-left: 10px; padding-right: 10px; }
+  #focus, #panel { display: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  * { animation-duration: .001ms !important; transition-duration: .001ms !important; }
+  .hot::after { animation: none; opacity: .95; }
+}
+</style>
+
+<div class="progress" id="prog" style="width:0"></div>
+
+<header class="bar">
+  <span class="mark">JH&amp;P</span>
+  <button class="btn icon" id="chapBtn" aria-pressed="false" aria-label="Chapters" title="Chapters (C)">☰</button>
+  <div class="where">
+    <b id="wTitle">Walkthrough</b>
+    <span id="wChap">Client onboarding</span>
+  </div>
+  <div class="spacer"></div>
+  <span class="count" id="count">—</span>
+  <button class="btn icon" id="prev" aria-label="Previous step" title="Previous (←)">‹</button>
+  <button class="btn icon" id="next" aria-label="Next step" title="Next (→)">›</button>
+  <button class="btn icon" id="focus" aria-pressed="true" aria-label="Toggle focus dimming" title="Dim around the hotspot (F)">◎</button>
+  <button class="btn icon" id="panel" aria-pressed="true" aria-label="Show or hide the panel" title="Hide the panel (H)">▤</button>
+  <button class="btn icon" id="theme" aria-label="Switch theme" title="Theme">◐</button>
+</header>
+
+<nav class="rail" id="rail" data-open="false" aria-label="Chapters">
+  <h3>Chapters</h3>
+  <div id="chapList"></div>
+</nav>
+
+<main class="stage">
+  <div class="frame" id="frame">
+    <img id="shot" alt="">
+    <div class="spot" id="spot" hidden></div>
+    <button class="hot" id="hot" hidden aria-label="Continue"></button>
+    <div class="tip" id="tip" role="status" aria-live="polite">
+      <div class="eyebrow"><span class="who" id="tWho"></span><span id="tAct"></span></div>
+      <h2 id="tTitle"></h2>
+      <p id="tBody"></p>
+      <div class="say" id="tSay" hidden><b>Say</b><span id="tSayText"></span></div>
+      <div class="tipnav">
+        <button class="next" id="tNext">Next</button>
+        <span class="hint">→ or Space</span>
+      </div>
+    </div>
+  </div>
+</main>
+
+<section class="sheet" id="cover">
+  <div class="sheetin">
+    <div class="kicker">Interactive walkthrough · captured from the live environment</div>
+    <h1 id="cvTitle">JH&amp;P AI-Embedded Client Onboarding</h1>
+    <p class="lede" id="cvLede"></p>
+    <div class="toc" id="cvToc"></div>
+    <button class="cta" id="start">Start the walkthrough</button>
+    <div class="meta" id="cvMeta"></div>
+  </div>
+</section>
+
+<section class="sheet" id="end" hidden>
+  <div class="sheetin">
+    <div class="kicker">End of walkthrough</div>
+    <h1>From a 44-page form to accounts opened, on one platform</h1>
+    <p class="lede">Every screen in this walkthrough is the running application: the client answered online, DocCenter read the evidence, an AI agent advised on the screening match and a person decided, and the portfolio manager's approval wrote back to Pulse, Symphony and Xplan. All of it is built, and changed, in Appian.</p>
+    <div class="toc" id="endToc"></div>
+    <button class="cta" id="restart">Start again</button>
+    <div class="meta" id="endMeta"></div>
+  </div>
+</section>
+
+<script id="data" type="application/json">{"title":"JH&P AI-Embedded Client Onboarding","subtitle":"A client application taken from first login to accounts opened, across the JH&P Portal, Onboarding and Portfolio sites","captured":"2026-10-15","chapters":[{"name":"The client application","from":1,"count":24},{"name":"The onboarding team","from":25,"count":15},{"name":"KYC and screening","from":40,"count":14},{"name":"Document intelligence","from":54,"count":9},{"name":"Ready for approval","from":63,"count":10},{"name":"Approval and accounts opened","from":73,"count":6},{"name":"Reporting and configuration","from":79,"count":3}],"steps":[{"n":1,"chapter":"The client application","title":"Rebecca's own front door","body":"The JH&P Portal replaces the 44-page paper form. Rebecca sees her progress, her team (James and her client service executive) and exactly what happens next, in JH&P's own brand.","say":null,"persona":"rebecca","action":"none","shot":"shots/100.jpg","target":{"x":7.46,"y":22.916,"w":17.553,"h":8.765}},{"n":2,"chapter":"The client application","title":"Pick up where she left off","body":"One button takes her into the application. Everything saves as she goes, so she can stop and come back at any time.","say":null,"persona":"rebecca","action":"click","shot":"shots/101.jpg","target":{"x":12.631,"y":85.829,"w":18.271,"h":6.889}},{"n":3,"chapter":"The client application","title":"Six short sections, not 44 pages","body":"The journey is tailored to her case: herself, Edward as joint applicant, the family company, accounts, source of wealth and documents. For the demo, the wand fills each step with Rebecca's answers.","say":null,"persona":"rebecca","action":"click","shot":"shots/102.jpg","target":{"x":35.783,"y":58.516,"w":6.347,"h":2.037}},{"n":4,"chapter":"The client application","title":"Validated as she types","body":"Email, mobile, date of birth and National Insurance number are checked in the form itself, so bad data never reaches the onboarding team.","say":null,"persona":"rebecca","action":"click","shot":"shots/103.jpg","target":{"x":76.054,"y":72.965,"w":10.296,"h":6.889}},{"n":5,"chapter":"The client application","title":"Tax position","body":"Nationality, tax residence and National Insurance number. A second tax residency only asks for a TIN when she says she has one.","say":null,"persona":"rebecca","action":"click","shot":"shots/104.jpg","target":{"x":35.783,"y":58.516,"w":6.347,"h":2.037}},{"n":6,"chapter":"The client application","title":"Questions appear only when they apply","body":"Dynamic rules show or hide questions based on her answers, so nobody answers a question that does not apply to them.","say":null,"persona":"rebecca","action":"click","shot":"shots/105.jpg","target":{"x":76.054,"y":73.65,"w":10.296,"h":6.889}},{"n":7,"chapter":"The client application","title":"Edward, the joint applicant","body":"Rebecca only gives Edward's name and email. He receives his own secure link and completes his identity section himself, in parallel.","say":null,"persona":"rebecca","action":"click","shot":"shots/106.jpg","target":{"x":35.783,"y":55.159,"w":6.347,"h":2.037}},{"n":8,"chapter":"The client application","title":"Parties work in parallel","body":"Each party on the case completes only their own part. The application continues while Edward does his.","say":null,"persona":"rebecca","action":"click","shot":"shots/107.jpg","target":{"x":76.054,"y":80.499,"w":10.296,"h":6.889}},{"n":9,"chapter":"The client application","title":"The family company","body":"Rebecca is a director of Ridge Holdings (UK) Ltd, so the journey adds a company section.","say":null,"persona":"rebecca","action":"click","shot":"shots/108.jpg","target":{"x":35.783,"y":55.159,"w":6.347,"h":2.037}},{"n":10,"chapter":"The client application","title":"Checked against Companies House","body":"The company number is checked against Companies House and the registered details come back automatically for her to confirm.","say":null,"persona":"rebecca","action":"click","shot":"shots/109.jpg","target":{"x":76.054,"y":79.876,"w":10.296,"h":6.889}},{"n":11,"chapter":"The client application","title":"People with significant control","body":"Directors and anyone owning more than a quarter of the shares are listed, each with their own status. Camilla Rose Vance is invited to verify her identity.","say":null,"persona":"rebecca","action":"click","shot":"shots/110.jpg","target":{"x":76.054,"y":81.282,"w":10.296,"h":6.889}},{"n":12,"chapter":"The client application","title":"Accounts and objectives","body":"The ISA and joint General Investment Account she discussed with James, with the objective and time horizon.","say":null,"persona":"rebecca","action":"click","shot":"shots/111.jpg","target":{"x":35.783,"y":55.159,"w":6.347,"h":2.037}},{"n":13,"chapter":"The client application","title":"Preferences recorded","body":"Long-term growth, ten years or more, excluding tobacco and controversial weapons: what she told James at their first meeting.","say":null,"persona":"rebecca","action":"click","shot":"shots/112.jpg","target":{"x":76.054,"y":81.289,"w":10.296,"h":6.889}},{"n":14,"chapter":"The client application","title":"Where the money comes from","body":"Source of wealth: the sale of 60% of Vance Interiors Ltd. The fields change with the type of wealth she picks.","say":null,"persona":"rebecca","action":"click","shot":"shots/113.jpg","target":{"x":35.783,"y":55.159,"w":6.347,"h":2.037}},{"n":15,"chapter":"The client application","title":"A question mid-form","body":"Rebecca is unsure what counts as source of wealth. Instead of emailing her client service executive, she opens the onboarding assistant.","say":null,"persona":"rebecca","action":"click","shot":"shots/150.jpg","target":{"x":41.338,"y":83.506,"w":7.265,"h":2.407}},{"n":16,"chapter":"The client application","title":"An Appian chat agent, scoped to this section","body":"The assistant is an Appian AI agent. It knows which section she is on and answers only from JH&P's published guidance.","say":null,"persona":"rebecca","action":"type","shot":"shots/151.jpg","target":{"x":34.017,"y":61.5,"w":53.494,"h":6.024}},{"n":17,"chapter":"The client application","title":"Answered, with its source","body":"Plain English, with the guidance it came from. It cannot give advice or change her answers, and one click hands the question to a person instead.","say":null,"persona":"rebecca","action":"none","shot":"shots/152.jpg","target":null},{"n":18,"chapter":"The client application","title":"Source of wealth complete","body":"The sale, its date and the approximate value of £2.1m. The form tells her which document we will ask for as evidence.","say":null,"persona":"rebecca","action":"click","shot":"shots/114.jpg","target":{"x":76.054,"y":81.275,"w":10.296,"h":6.889}},{"n":19,"chapter":"The client application","title":"Three of four documents already on file","body":"Passport, proof of address and the Companies House extract were collected automatically. Only one upload is needed.","say":null,"persona":"rebecca","action":"click","shot":"shots/115.jpg","target":{"x":35.783,"y":55.159,"w":6.347,"h":2.037}},{"n":20,"chapter":"The client application","title":"The completion statement","body":"She uploads the completion statement from the sale. The portal checks it is the right kind of document before accepting it.","say":null,"persona":"rebecca","action":"none","shot":"shots/116.jpg","target":null},{"n":21,"chapter":"The client application","title":"Received, and on to signing","body":"The statement is received and sent to Appian DocCenter in the background. Rebecca does not wait: she goes straight to signing.","say":null,"persona":"rebecca","action":"click","shot":"shots/117.jpg","target":{"x":73.462,"y":81.283,"w":12.887,"h":6.889}},{"n":22,"chapter":"The client application","title":"Identity checks and signatures","body":"Identity and address were already verified. Three agreements are ready to read and sign online, and Edward signs the joint mandate afterwards.","say":null,"persona":"rebecca","action":"none","shot":"shots/118.jpg","target":null},{"n":23,"chapter":"The client application","title":"Sign and submit","body":"One action signs the three agreements and submits the application. It locks, and the onboarding team is told straight away.","say":null,"persona":"rebecca","action":"click","shot":"shots/119.jpg","target":{"x":68.915,"y":85.821,"w":14.419,"h":6.889}},{"n":24,"chapter":"The client application","title":"Signed and submitted","body":"Every agreement shows as signed. What took weeks of paper and rekeying took one sitting, with every answer captured as structured data.","say":null,"persona":"rebecca","action":"none","shot":"shots/120.jpg","target":null},{"n":25,"chapter":"The onboarding team","title":"The client service executive's day","body":"The Onboarding site opens on the live queue. Hartley-Vance has just submitted, two cases are past their service target, and everything that needs a person is listed on the right.","say":null,"persona":"cse","action":"none","shot":"shots/200.jpg","target":{"x":11.458,"y":45.49,"w":8.479,"h":2.407}},{"n":26,"chapter":"The onboarding team","title":"Ask about your cases","body":"The case assistant is collapsed until it is needed. One click opens it.","say":null,"persona":"cse","action":"click","shot":"shots/200.jpg","target":{"x":82.233,"y":32.028,"w":7.361,"h":2.037}},{"n":27,"chapter":"The onboarding team","title":"Plain-English questions about live cases","body":"The second AI ask from the RFI: natural-language case status. The question goes to an Appian chat agent that reads a live snapshot of the case records.","say":null,"persona":"cse","action":"type","shot":"shots/202.jpg","target":{"x":18.81,"y":47.018,"w":61.686,"h":6.024}},{"n":28,"chapter":"The onboarding team","title":"Answered from the live records","body":"Carrington Trust and Ashmole Charitable Fund are past the 5-day target, and it lists what is still open on Hartley-Vance, with owners and due dates. It reads the data; it cannot change it.","say":null,"persona":"cse","action":"none","shot":"shots/203.jpg","target":null},{"n":29,"chapter":"The onboarding team","title":"Back to the queue","body":"Hide the assistant and go to work on the new submission.","say":null,"persona":"cse","action":"click","shot":"shots/204.jpg","target":{"x":86.28,"y":32.028,"w":3.314,"h":2.037}},{"n":30,"chapter":"The onboarding team","title":"Review the submission","body":"The new submission card opens the case straight on the Application tab.","say":null,"persona":"cse","action":"click","shot":"shots/205.jpg","target":{"x":55.196,"y":47.317,"w":5.985,"h":4.394}},{"n":31,"chapter":"The onboarding team","title":"Everything the client gave, in one place","body":"Her answers, read-only and grouped as she saw them, beside the evidence she uploaded. Nothing has been rekeyed.","say":null,"persona":"cse","action":"none","shot":"shots/206.jpg","target":null},{"n":32,"chapter":"The onboarding team","title":"DocCenter is already reading","body":"Appian DocCenter is extracting the completion statement with a trained model. The review task appears here when it finishes.","say":null,"persona":"cse","action":"none","shot":"shots/207.jpg","target":{"x":67.719,"y":64,"w":19.924,"h":7.568}},{"n":33,"chapter":"The onboarding team","title":"The case overview","body":"The Overview shows what is outstanding on the case and who owns each item.","say":null,"persona":"cse","action":"click","shot":"shots/206.jpg","target":{"x":7.46,"y":32.054,"w":5.012,"h":2.037}},{"n":34,"chapter":"The onboarding team","title":"What stands between the case and approval","body":"Each open item has an owner, a due date and a one-click action: the PEP match to review, Edward's section, the submission and the extracted statement.","say":null,"persona":"cse","action":"none","shot":"shots/209.jpg","target":null},{"n":35,"chapter":"The onboarding team","title":"Xplan, Pulse, Symphony, Azure","body":"The four systems JH&P named, with the sync status of each, read from the integration log. Pulse and Symphony are written to on approval.","say":null,"persona":"cse","action":"none","shot":"shots/210.jpg","target":{"x":85.825,"y":70.961,"w":3.064,"h":2.037}},{"n":36,"chapter":"The onboarding team","title":"Parties","body":"Every person and entity on the case.","say":null,"persona":"cse","action":"click","shot":"shots/209.jpg","target":{"x":21.293,"y":32.054,"w":3.664,"h":2.037}},{"n":37,"chapter":"The onboarding team","title":"Multi-party onboarding","body":"Applicants, the company, its director and the accountants, each with their own screening and invite status, and a resend invite where needed.","say":null,"persona":"cse","action":"none","shot":"shots/212.jpg","target":null},{"n":38,"chapter":"The onboarding team","title":"Documents","body":"All evidence and agreements for the case.","say":null,"persona":"cse","action":"click","shot":"shots/212.jpg","target":{"x":33.722,"y":32.054,"w":6.039,"h":2.037}},{"n":39,"chapter":"The onboarding team","title":"Evidence, with DocCenter status","body":"Passport, proof of address and the Companies House extract on file; the completion statement awaiting review; the agreements signed.","say":null,"persona":"cse","action":"none","shot":"shots/214.jpg","target":null},{"n":40,"chapter":"KYC and screening","title":"A possible PEP match","body":"Camilla Rose Vance, a director of the family company, has a weak 38% match against a regional councillor. Review match opens the screening check in place.","say":null,"persona":"cse","action":"click","shot":"shots/300.jpg","target":{"x":45.834,"y":56.029,"w":5.993,"h":2.037}},{"n":41,"chapter":"KYC and screening","title":"The screening check","body":"What we send to the screening provider: name, year of birth, nationality, residence and her role on the case.","say":null,"persona":"cse","action":"none","shot":"shots/301.jpg","target":null},{"n":42,"chapter":"KYC and screening","title":"Run the screening check","body":"One click calls the screening provider (mocked for the demo) and starts the JHP screening agent, an Appian process agent.","say":null,"persona":"cse","action":"click","shot":"shots/302.jpg","target":{"x":43.885,"y":47.78,"w":14.618,"h":4.394}},{"n":43,"chapter":"KYC and screening","title":"The agent reviews the match","body":"The provider record comes back and the screening agent compares it with what JH&P holds, in the background.","say":null,"persona":"cse","action":"none","shot":"shots/301.jpg","target":null},{"n":44,"chapter":"KYC and screening","title":"Logged with a reference","body":"The check is recorded with the provider's reference and time, for the audit trail.","say":null,"persona":"cse","action":"none","shot":"shots/304.jpg","target":null},{"n":45,"chapter":"KYC and screening","title":"Identifier by identifier","body":"Name and year of birth match. Addresses (London against Edinburgh), directorships and public role all differ.","say":null,"persona":"cse","action":"none","shot":"shots/305.jpg","target":{"x":12.678,"y":19.752,"w":9.345,"h":2.099}},{"n":46,"chapter":"KYC and screening","title":"The agent advises","body":"The screening agent recommends no match and explains why: two strong identifiers clearly differ and the score is low. Its reasoning is kept on the file.","say":null,"persona":"cse","action":"none","shot":"shots/306.jpg","target":{"x":15.882,"y":19.756,"w":9.013,"h":2.037}},{"n":47,"chapter":"KYC and screening","title":"A person decides","body":"The client service executive records the decision: not the same person.","say":null,"persona":"cse","action":"click","shot":"shots/307.jpg","target":{"x":12.678,"y":24.263,"w":18.658,"h":2.54}},{"n":48,"chapter":"KYC and screening","title":"Reasoning for the file","body":"Her reasoning is required and stored with the decision.","say":null,"persona":"cse","action":"type","shot":"shots/308.jpg","target":{"x":12.678,"y":39.732,"w":45.825,"h":8.852}},{"n":49,"chapter":"KYC and screening","title":"Confirm the comparison","body":"She confirms she has compared every identifier herself, so the decision is never a rubber stamp of the AI.","say":null,"persona":"cse","action":"click","shot":"shots/309.jpg","target":{"x":12.678,"y":50.056,"w":29.179,"h":2.54}},{"n":50,"chapter":"KYC and screening","title":"Confirm the decision","body":"The decision is validated before it is saved.","say":null,"persona":"cse","action":"click","shot":"shots/310.jpg","target":{"x":12.678,"y":54.293,"w":11.546,"h":4.394}},{"n":51,"chapter":"KYC and screening","title":"Four eyes, without the wait","body":"The match clears now, and the Head of Compliance is emailed for second approval. Segregation of duties without stalling the case.","say":null,"persona":"cse","action":"click","shot":"shots/311.jpg","target":{"x":56.159,"y":35.357,"w":8.216,"h":5.556}},{"n":52,"chapter":"KYC and screening","title":"Second approval requested","body":"The request to compliance is shown on the case, with the decision, reasoning and provider reference, and logged in the integration log.","say":null,"persona":"cse","action":"none","shot":"shots/312.jpg","target":{"x":35.625,"y":22.987,"w":28.75,"h":8.296}},{"n":53,"chapter":"KYC and screening","title":"Cleared","body":"The PEP item has moved to Done. Three items remain.","say":null,"persona":"cse","action":"none","shot":"shots/313.jpg","target":null},{"n":54,"chapter":"Document intelligence","title":"DocCenter has finished","body":"The completion statement has been read. Reconcile in DocCenter opens the review task.","say":null,"persona":"cse","action":"click","shot":"shots/400.jpg","target":{"x":45.834,"y":54.077,"w":9.977,"h":2.037}},{"n":55,"chapter":"Document intelligence","title":"Accept the task","body":"Review is a governed task: accepting it stops two people working the same document.","say":null,"persona":"cse","action":"click","shot":"shots/401.jpg","target":{"x":70.942,"y":11.199,"w":7.224,"h":4.394}},{"n":56,"chapter":"Document intelligence","title":"Appian DocCenter: reconcile fields","body":"32 fields extracted from the six-page statement, each with its confidence, side by side with the document itself.","say":null,"persona":"cse","action":"none","shot":"shots/402.jpg","target":null},{"n":57,"chapter":"Document intelligence","title":"Check, correct, highlight","body":"Any value can be corrected by highlighting it on the document. Net proceeds of £1,968,400 are what the client actually received.","say":null,"persona":"cse","action":"none","shot":"shots/403.jpg","target":{"x":3.809,"y":71.084,"w":8.411,"h":2.407}},{"n":58,"chapter":"Document intelligence","title":"Submit the review","body":"The reviewed values are written to the case as structured data, and compared with what Rebecca declared.","say":null,"persona":"cse","action":"click","shot":"shots/404.jpg","target":{"x":40.206,"y":87.577,"w":7.245,"h":5.556}},{"n":59,"chapter":"Document intelligence","title":"A mismatch, raised by AI","body":"Net proceeds are 6.3% below the £2.1m declared, outside the 5% tolerance set by the business, so an evidence-mismatch item is raised automatically.","say":null,"persona":"cse","action":"click","shot":"shots/405.jpg","target":{"x":45.834,"y":84.324,"w":7.144,"h":2.037}},{"n":60,"chapter":"Document intelligence","title":"Review the evidence beside the decision","body":"The statement opens next to the decision. The gross price matches; the difference is deal fees. She accepts the evidence, or could ask the client to explain.","say":null,"persona":"cse","action":"click","shot":"shots/406.jpg","target":{"x":36.285,"y":50.101,"w":22.218,"h":5.079}},{"n":61,"chapter":"Document intelligence","title":"A note for the file","body":"Every resolution carries a note, written to the audit trail.","say":null,"persona":"cse","action":"type","shot":"shots/407.jpg","target":{"x":36.285,"y":41.994,"w":22.218,"h":8.852}},{"n":62,"chapter":"Document intelligence","title":"Resolved","body":"The mismatch is closed with the reason recorded.","say":null,"persona":"cse","action":"click","shot":"shots/408.jpg","target":{"x":36.285,"y":47.812,"w":6.372,"h":4.394}},{"n":63,"chapter":"Ready for approval","title":"Edward's section","body":"Edward is travelling. The executive has confirmed with him by phone.","say":null,"persona":"cse","action":"click","shot":"shots/410.jpg","target":{"x":45.834,"y":56.029,"w":3.349,"h":2.037}},{"n":64,"chapter":"Ready for approval","title":"How it was resolved","body":"The form fits the item: for information requests, how it was resolved.","say":null,"persona":"cse","action":"click","shot":"shots/411.jpg","target":{"x":12.678,"y":44.168,"w":24.376,"h":2.54}},{"n":65,"chapter":"Ready for approval","title":"Recorded","body":"The note goes on the file.","say":null,"persona":"cse","action":"type","shot":"shots/412.jpg","target":{"x":12.678,"y":47.291,"w":45.825,"h":8.852}},{"n":66,"chapter":"Ready for approval","title":"Resolve","body":"The item closes and the case moves on.","say":null,"persona":"cse","action":"click","shot":"shots/413.jpg","target":{"x":12.678,"y":54.343,"w":6.372,"h":4.394}},{"n":67,"chapter":"Ready for approval","title":"Back to the application","body":"With the checks done, the application review can be closed.","say":null,"persona":"cse","action":"click","shot":"shots/414.jpg","target":{"x":13.843,"y":32.054,"w":6.163,"h":2.037}},{"n":68,"chapter":"Ready for approval","title":"Mark the application reviewed","body":"Closes the review item raised when Rebecca submitted, and moves the case to Checks.","say":null,"persona":"cse","action":"click","shot":"shots/415.jpg","target":{"x":67.719,"y":47.818,"w":18.224,"h":4.394}},{"n":69,"chapter":"Ready for approval","title":"Send for approval","body":"Guarded: the button refuses while anything blocking is still open. Now the case goes to James, with a case summary drafted by AI from the record.","say":null,"persona":"cse","action":"click","shot":"shots/416.jpg","target":{"x":78.041,"y":23.154,"w":13.458,"h":4.394}},{"n":70,"chapter":"Ready for approval","title":"With the portfolio manager","body":"The case is with James Horniman for approval, and the summary is on the Overview.","say":null,"persona":"cse","action":"none","shot":"shots/417.jpg","target":{"x":10.664,"y":33.868,"w":17.329,"h":2.407}},{"n":71,"chapter":"Ready for approval","title":"The audit trail","body":"Every action on the case, by the client, staff, services and AI.","say":null,"persona":"cse","action":"click","shot":"shots/417.jpg","target":{"x":47.19,"y":45.774,"w":2.887,"h":2.037}},{"n":72,"chapter":"Ready for approval","title":"Who did what, and why","body":"Filterable by people, automated services and AI, with the detail of each entry, including the agents' reasoning.","say":null,"persona":"cse","action":"none","shot":"shots/419.jpg","target":null},{"n":73,"chapter":"Approval and accounts opened","title":"The JH&P Portfolio site","body":"A separate site for portfolio managers, in a different palette, on the same platform. James sees his pipeline and what is waiting for him.","say":null,"persona":"pm","action":"click","shot":"shots/500.jpg","target":{"x":27.638,"y":64.937,"w":10.182,"h":2.346}},{"n":74,"chapter":"Approval and accounts opened","title":"Everything he needs on one screen","body":"The AI-drafted case summary, the client with identifiers masked for his role, and the checks before approval: identity, screening, source of wealth, parties, risk rating and segregation of duties, each worked out from the case record.","say":null,"persona":"pm","action":"none","shot":"shots/501.jpg","target":null},{"n":75,"chapter":"Approval and accounts opened","title":"A note for the file","body":"James records his approval note.","say":null,"persona":"pm","action":"type","shot":"shots/501.jpg","target":{"x":67.639,"y":31.137,"w":21.807,"h":7.086}},{"n":76,"chapter":"Approval and accounts opened","title":"Approve and open accounts","body":"One approval writes back to Pulse (accounts), Symphony (portfolio) and Xplan (client status), and tells Rebecca.","say":null,"persona":"pm","action":"click","shot":"shots/504.jpg","target":{"x":67.639,"y":41.804,"w":15.988,"h":4.197}},{"n":77,"chapter":"Approval and accounts opened","title":"Approved","body":"The case is opened, with the write-back to each system logged.","say":null,"persona":"pm","action":"none","shot":"shots/505.jpg","target":null},{"n":78,"chapter":"Approval and accounts opened","title":"Rebecca sees it straight away","body":"Her portal shows the accounts open, with a message from her team. No chasing, no post.","say":null,"persona":"rebecca","action":"none","shot":"shots/600.jpg","target":null},{"n":79,"chapter":"Reporting and configuration","title":"Onboarding MI, live","body":"Open and late cases, time to open, straight-through document rate, answers pre-filled and AI actions, computed from the case records.","say":null,"persona":"cse","action":"none","shot":"shots/700.jpg","target":null},{"n":80,"chapter":"Reporting and configuration","title":"Where work waits, and where AI is used","body":"Cases by stage, what open cases are waiting on, back-office sync health, and every place AI is used and checked.","say":null,"persona":"cse","action":"none","shot":"shots/701.jpg","target":null},{"n":81,"chapter":"Reporting and configuration","title":"Changed by the business, with no release","body":"Guidance, tooltips, dropdown options, required fields, service levels and risk weights are edited here and apply immediately. Journeys and integrations change in Appian Designer, through release approval.","say":null,"persona":"cse","action":"none","shot":"shots/702.jpg","target":null}]}</script>
+
+<script>
+(function () {
+  'use strict';
+  var DATA = JSON.parse(document.getElementById('data').textContent);
+  var STEPS = DATA.steps, CHAPS = DATA.chapters, N = STEPS.length;
+  var i = 0, started = false;
+
+  var $ = function (id) { return document.getElementById(id); };
+  var shot = $('shot'), spot = $('spot'), hot = $('hot'),
+      tip = $('tip'), frame = $('frame'), rail = $('rail');
+
+  var PERSONA = { rebecca: 'Rebecca · client', cse: 'Client service executive',
+                  pm: 'James · portfolio manager' };
+
+  /* ---- theme: remembered per viewer, harmless if storage is unavailable ---- */
+  try {
+    var saved = localStorage.getItem('jhp-theme');
+    if (saved) document.documentElement.setAttribute('data-theme', saved);
+  } catch (e) {}
+  $('theme').addEventListener('click', function () {
+    var cur = document.documentElement.getAttribute('data-theme');
+    var isDark = cur ? cur === 'dark'
+      : window.matchMedia('(prefers-color-scheme: dark)').matches;
+    var nextTheme = isDark ? 'light' : 'dark';
+    document.documentElement.setAttribute('data-theme', nextTheme);
+    try { localStorage.setItem('jhp-theme', nextTheme); } catch (e) {}
+  });
+
+  /* ---- presenter toggles ---- */
+  function setFlag(cls, on, btn, key) {
+    document.body.classList.toggle(cls, !on);
+    $(btn).setAttribute('aria-pressed', on ? 'true' : 'false');
+    try { localStorage.setItem(key, on ? '1' : '0'); } catch (e) {}
+  }
+  var dimOn = true, panelOn = true;
+  try {
+    if (localStorage.getItem('jhp-dim') === '0') dimOn = false;
+    if (localStorage.getItem('jhp-panel') === '0') panelOn = false;
+  } catch (e) {}
+  setFlag('nodim', dimOn, 'focus', 'jhp-dim');
+  setFlag('nopanel', panelOn, 'panel', 'jhp-panel');
+  $('focus').addEventListener('click', function () { dimOn = !dimOn; setFlag('nodim', dimOn, 'focus', 'jhp-dim'); });
+  $('panel').addEventListener('click', function () { panelOn = !panelOn; setFlag('nopanel', panelOn, 'panel', 'jhp-panel'); });
+
+  /* ---- cover ---- */
+  $('cvTitle').textContent = DATA.title;
+  $('cvLede').textContent = DATA.subtitle + '. ' + N +
+    ' steps across ' + CHAPS.length + ' chapters, every screen captured from the running application.';
+  $('cvMeta').innerHTML = 'Captured ' + DATA.captured +
+    ' · cms-2.appiancloud.com<br>Click the pulsing marker, or use → ← and Space.<br>C for chapters · F for focus dimming · H to hide the panel.';
+  function tocHtml() {
+    return CHAPS.map(function (c, n) {
+      return '<div><b>' + (n + 1) + '. ' + esc(c.name) + '</b><span>' + c.count + ' steps</span></div>';
+    }).join('');
+  }
+  $('cvToc').innerHTML = tocHtml();
+  $('endToc').innerHTML = tocHtml();
+  $('endMeta').textContent = 'JH&P AI-Embedded Client Onboarding · built on Appian · ' + DATA.captured;
+
+  function esc(s) {
+    return String(s).replace(/[&<>"]/g, function (c) {
+      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c];
+    });
+  }
+
+  /* ---- chapter rail ---- */
+  CHAPS.forEach(function (c, n) {
+    var b = document.createElement('button');
+    b.className = 'chap';
+    b.innerHTML = '<span class="cn">' + String(n + 1).padStart(2, '0') + '</span>' +
+                  '<span class="ct">' + esc(c.name) + '</span>' +
+                  '<span class="cc">' + c.count + '</span>';
+    b.addEventListener('click', function () { go(c.from - 1); setRail(false); });
+    b.dataset.from = c.from;
+    $('chapList').appendChild(b);
+  });
+  function setRail(open) {
+    rail.dataset.open = open ? 'true' : 'false';
+    $('chapBtn').setAttribute('aria-pressed', open ? 'true' : 'false');
+  }
+  $('chapBtn').addEventListener('click', function () {
+    setRail(rail.dataset.open !== 'true');
+  });
+
+  /* ---- placing the panel ---- */
+  function place(t) {
+    if (window.innerWidth <= 760) { tip.style.cssText = ''; return; }
+    var fw = frame.clientWidth, fh = frame.clientHeight;
+    var tw = tip.offsetWidth, th = tip.offsetHeight, gap = 18, edge = 16;
+    var tx = t.x / 100 * fw, ty = t.y / 100 * fh;
+    var tWd = t.w / 100 * fw, tHt = t.h / 100 * fh;
+    var cx = tx + tWd / 2, cy = ty + tHt / 2;
+    var clamp = function (v, lo, hi) { return Math.min(Math.max(v, lo), hi); };
+
+    var below = ty + tHt + gap, above = ty - th - gap;
+    var right = tx + tWd + gap, left = tx - tw - gap;
+    var pos = null;
+    // A wide target centred under it would put the panel straight over the
+    // content the step is describing. Hug the nearer frame edge instead, so
+    // the other side of the screen stays readable.
+    var wide = tWd > fw * 0.35;
+    var lx = wide
+      ? (cx > fw / 2 ? fw - tw - edge : edge)
+      : clamp(cx - tw / 2, edge, fw - tw - edge);
+    var vmid = clamp(cy - th / 2, edge, fh - th - edge);
+    // Order of preference depends on the shape of the target. A narrow target
+    // is almost always a control inside a card, and the rest of that card sits
+    // directly below it — so go beside it and leave the column intact. A wide
+    // target spans the screen, so no side fits and below/above is the only
+    // honest choice.
+    var order = wide
+      ? [[below + th <= fh - edge, lx, below], [above >= edge, lx, above],
+         [right + tw <= fw - edge, right, vmid], [left >= edge, left, vmid]]
+      : [[right + tw <= fw - edge, right, vmid], [left >= edge, left, vmid],
+         [below + th <= fh - edge, lx, below], [above >= edge, lx, above]];
+    for (var k = 0; k < order.length && !pos; k++) {
+      if (order[k][0]) pos = { l: order[k][1], t: order[k][2] };
+    }
+    if (!pos) {
+      // Nothing fits cleanly: take the roomier side and keep off the hotspot.
+      pos = (fw - (tx + tWd)) > tx
+        ? { l: fw - tw - edge, t: clamp(cy - th / 2, edge, fh - th - edge) }
+        : { l: edge,           t: clamp(cy - th / 2, edge, fh - th - edge) };
+    }
+    tip.style.left = Math.round(pos.l) + 'px';
+    tip.style.top = Math.round(pos.t) + 'px';
+    tip.style.right = 'auto';
+    tip.style.bottom = 'auto';
+    tip.style.transform = 'none';
+  }
+
+  /* ---- render ---- */
+  function render() {
+    var s = STEPS[i];
+    shot.src = s.shot;
+    shot.alt = s.title + ' — ' + s.chapter;
+
+    $('wTitle').textContent = s.title;
+    $('wChap').textContent = s.chapter;
+    $('count').textContent = (i + 1) + ' / ' + N;
+    $('prog').style.width = ((i + 1) / N * 100) + '%';
+
+    $('tWho').textContent = PERSONA[s.persona] || '';
+    $('tWho').dataset.p = s.persona || '';
+    $('tAct').textContent = s.action === 'click' ? '· click'
+      : s.action === 'type' ? '· type' : '';
+    $('tTitle').textContent = s.title;
+    $('tBody').textContent = s.body;
+    if (s.say) { $('tSayText').textContent = s.say; $('tSay').hidden = false; }
+    else { $('tSay').hidden = true; }
+
+    var t = s.target;
+    if (t) {
+      tip.classList.remove('card');
+      spot.hidden = false; hot.hidden = false;
+      spot.classList.toggle('point', s.action === 'none');
+      // Some targets are thin labels. Pad the marker outwards around the same
+      // centre so it reads as a marker, without shifting what it points at.
+      var MIN_W = 2.6, MIN_H = 2.6;
+      var dw = Math.max(0, MIN_W - t.w) / 2, dh = Math.max(0, MIN_H - t.h) / 2;
+      var bx = Math.max(0, t.x - dw), by = Math.max(0, t.y - dh);
+      var bw = Math.min(100 - bx, t.w + dw * 2), bh = Math.min(100 - by, t.h + dh * 2);
+      var css = 'left:' + bx + '%;top:' + by + '%;width:' + bw + '%;height:' + bh + '%';
+      spot.style.cssText = css;
+      hot.style.cssText = css;
+      place(t);
+    } else {
+      tip.classList.add('card');
+      spot.hidden = true; hot.hidden = true;
+      tip.style.cssText = '';
+    }
+
+    // Keep the next two frames warm so advancing never shows a blank stage.
+    [1, 2].forEach(function (d) {
+      if (STEPS[i + d]) { var im = new Image(); im.src = STEPS[i + d].shot; }
+    });
+
+    var cur = null;
+    CHAPS.forEach(function (c) { if (c.from <= i + 1) cur = c.name; });
+    [].forEach.call($('chapList').children, function (b, n) {
+      b.setAttribute('aria-current', CHAPS[n].name === cur ? 'true' : 'false');
+    });
+  }
+
+  function go(n) {
+    if (n < 0) return;
+    if (n >= N) { $('end').hidden = false; return; }
+    i = n; render();
+    // Keep the address bar on the current step so any screen can be linked to.
+    // replaceState, not pushState: stepping through 86 steps should not leave
+    // 86 entries in the back button.
+    if (started) {
+      try { history.replaceState(null, '', '#s=' + (i + 1)); } catch (e) {}
+    }
+  }
+
+  /* ---- deep links ----------------------------------------------------
+     #s=44 opens at step 44, #c=4 at the start of chapter 4. Either skips
+     the cover, because a link that names a step means to go there. No hash
+     (the embedded copy, or a plain visit) behaves exactly as before. */
+  function fromHash() {
+    var h = (location.hash || '').replace(/^#/, '');
+    if (!h) return -1;
+    var m = /^s=(\d+)$/.exec(h);
+    if (m) { var n = parseInt(m[1], 10); return (n >= 1 && n <= N) ? n - 1 : -1; }
+    m = /^c=(\d+)$/.exec(h);
+    if (m) { var c = CHAPS[parseInt(m[1], 10) - 1]; return c ? c.from - 1 : -1; }
+    return -1;
+  }
+  function openAt(n) {
+    $('cover').hidden = true; $('end').hidden = true; started = true; go(n);
+  }
+  window.addEventListener('hashchange', function () {
+    var n = fromHash();
+    if (n >= 0 && n !== i) openAt(n);
+  });
+  function advance() { go(i + 1); }
+  function back() {
+    if ($('end').hidden === false) { $('end').hidden = true; return; }
+    go(i - 1);
+  }
+
+  hot.addEventListener('click', advance);
+  $('tNext').addEventListener('click', advance);
+  $('next').addEventListener('click', advance);
+  $('prev').addEventListener('click', back);
+
+  $('start').addEventListener('click', function () {
+    $('cover').hidden = true; started = true; render();
+  });
+  $('restart').addEventListener('click', function () {
+    $('end').hidden = true; $('cover').hidden = true; started = true; go(0);
+  });
+
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'c' || e.key === 'C') { setRail(rail.dataset.open !== 'true'); return; }
+    if (e.key === 'f' || e.key === 'F') { dimOn = !dimOn; setFlag('nodim', dimOn, 'focus', 'jhp-dim'); return; }
+    if (e.key === 'h' || e.key === 'H') { panelOn = !panelOn; setFlag('nopanel', panelOn, 'panel', 'jhp-panel'); return; }
+    if (e.key === 'Escape') { setRail(false); return; }
+    if (!started) {
+      if (e.key === 'Enter' || e.key === ' ' || e.key === 'ArrowRight') {
+        e.preventDefault(); $('start').click();
+      }
+      return;
+    }
+    if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') { e.preventDefault(); advance(); }
+    else if (e.key === 'ArrowLeft' || e.key === 'PageUp') { e.preventDefault(); back(); }
+    else if (e.key === 'Home') { go(0); }
+    else if (e.key === 'End') { go(N - 1); }
+  });
+
+  window.addEventListener('resize', function () {
+    if (started && STEPS[i] && STEPS[i].target) place(STEPS[i].target);
+  });
+
+  var deep = fromHash();
+  if (deep >= 0) openAt(deep); else render();
+})();
+</script>

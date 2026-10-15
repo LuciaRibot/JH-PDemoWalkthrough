@@ -1,0 +1,602 @@
+<title>JH&amp;P Onboarding Walkthrough</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700;900&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+
+<style>
+/* Layout: the screenshot is the stage, held at the capture's own 16:10 and
+   centred under a slim bar. The dim mask, hotspot and tooltip are positioned
+   inside that frame in capture percentages, so they stay locked to the pixels
+   they were measured against at any screen size. Chapter nav slides in. */
+:root {
+  --paper:#F2ECE7; --surface:#FFFFFF; --sunk:#E8E0D9;
+  --ink:#1F2437; --muted:#6B6670; --line:#DCD3CB;
+  --brand:#4C1E35; --brand-deep:#24294F; --on-brand:#FFFFFF;
+  --mask:rgba(22,19,20,.17);
+  --client:#0B6E5A; --tmf:#4C1E35; --admin:#24294F;
+  --ok:#117C00;
+  --display:'Lato', 'Helvetica Neue', Arial, sans-serif;
+  --body:'IBM Plex Sans', system-ui, -apple-system, Segoe UI, sans-serif;
+  --mono:'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+  --bar:54px;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --paper:#131519; --surface:#1C1F24; --sunk:#262A30;
+    --ink:#F0EDEA; --muted:#9C958F; --line:#2F343B;
+    --brand:#D9A5BE; --brand-deep:#A5847F; --on-brand:#1A0F14;
+    --mask:rgba(6,7,9,.26);
+    --client:#5FC2AA; --tmf:#D9A5BE; --admin:#9AA6D6;
+    --ok:#4ADE80;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --paper:#131519; --surface:#1C1F24; --sunk:#262A30;
+  --ink:#F0EDEA; --muted:#9C958F; --line:#2F343B;
+  --brand:#D9A5BE; --brand-deep:#A5847F; --on-brand:#1A0F14;
+  --mask:rgba(6,7,9,.26);
+  --client:#5FC2AA; --tmf:#D9A5BE; --admin:#9AA6D6;
+  --ok:#4ADE80;
+  color-scheme: dark;
+}
+
+/* The publish skeleton supplies this, a standalone deploy does not — and
+   .sheet{display:grid} outranks the browser default, so a hidden cover or end
+   screen would stay on top and swallow every click. */
+[hidden] { display: none !important; }
+
+* { box-sizing: border-box; }
+html, body { height: 100%; }
+body {
+  margin: 0; background: var(--paper); color: var(--ink);
+  font-family: var(--body); font-size: 15px; line-height: 1.5;
+  overflow: hidden;
+}
+button { font: inherit; color: inherit; cursor: pointer; }
+:focus-visible { outline: 2.5px solid var(--brand); outline-offset: 2px; border-radius: 3px; }
+
+/* ----------------------------------------------------------- top bar */
+.bar {
+  position: fixed; inset: 0 0 auto 0; height: var(--bar);
+  padding: 0 14px; padding-top: env(safe-area-inset-top, 0px);
+  display: flex; align-items: center; gap: 12px;
+  background: color-mix(in srgb, var(--surface) 92%, transparent);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--line); z-index: 40;
+}
+.mark {
+  font-family: var(--display); font-weight: 800; font-size: 13px; letter-spacing: .14em;
+  background: var(--brand); color: var(--on-brand); padding: 5px 7px; border-radius: 3px;
+  flex: none;
+}
+.where { min-width: 0; display: flex; flex-direction: column; justify-content: center; }
+.where b {
+  font-family: var(--display); font-weight: 700; font-size: 14px; line-height: 1.15;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.where span {
+  font-family: var(--mono); font-size: 10.5px; letter-spacing: .08em; text-transform: uppercase;
+  color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.spacer { flex: 1 1 auto; }
+.count {
+  font-family: var(--mono); font-size: 12px; font-variant-numeric: tabular-nums;
+  color: var(--muted); flex: none;
+}
+.btn {
+  border: 1px solid var(--line); background: var(--surface); color: var(--ink);
+  border-radius: 6px; height: 32px; padding: 0 11px; font-size: 13px; font-weight: 500;
+  display: inline-flex; align-items: center; gap: 6px; flex: none;
+}
+.btn:hover { border-color: var(--brand); color: var(--brand); }
+.btn[aria-pressed="true"] { background: var(--sunk); }
+.btn.icon { width: 32px; padding: 0; justify-content: center; font-size: 15px; }
+
+.progress { position: fixed; top: 0; left: 0; height: 2px; background: var(--brand); z-index: 50; transition: width .28s ease; }
+
+/* ----------------------------------------------------------- stage */
+.stage {
+  position: absolute; inset: calc(var(--bar) + env(safe-area-inset-top, 0px)) 0 0 0;
+  display: grid; place-items: center; padding: 18px;
+}
+/* The frame shrink-wraps the image instead of forcing its own aspect ratio.
+   With a fixed aspect-ratio plus object-fit:cover the browser cropped the
+   screenshot whenever the box and the image disagreed even slightly, and the
+   hotspot percentages — which are measured against the image — stopped
+   landing on the pixels they were measured from. Letting the image size
+   itself keeps 1% of the frame equal to 1% of the capture. */
+.frame {
+  position: relative; line-height: 0;
+  max-width: 100%; max-height: 100%;
+  border-radius: 10px; overflow: hidden;
+  background: var(--sunk);
+  box-shadow: 0 18px 50px rgba(0,0,0,.22), 0 0 0 1px var(--line);
+}
+.frame img {
+  display: block; width: auto; height: auto;
+  max-width: 100%; max-height: 100%;
+}
+
+/* The dim: one transparent box with an enormous shadow, so the cutout is the
+   only lit area. No second element and no SVG mask to keep in sync. */
+.spot {
+  position: absolute; border-radius: 7px; pointer-events: none;
+  box-shadow: 0 0 0 100vmax var(--mask);
+  outline: 3px solid var(--brand); outline-offset: 2px;
+  transition: all .3s cubic-bezier(.4,0,.2,1);
+}
+/* Focus off: keep the ring and the pulse, drop the dim entirely. */
+body.nodim .spot { box-shadow: none; }
+/* Narration steps point without dimming. Only a step that asks for a click or
+   a keystroke needs the rest of the screen pushed back; a step that is talking
+   about the screen needs the screen. Dimming those was what made the whole
+   walkthrough read as blacked out. */
+.spot.point { box-shadow: none; }
+
+.hot {
+  position: absolute; border: 0; background: transparent; padding: 0;
+  border-radius: 7px; z-index: 3; cursor: pointer;
+  transition: all .3s cubic-bezier(.4,0,.2,1);
+}
+.hot::after {
+  content: ''; position: absolute; inset: -5px; border-radius: 10px;
+  border: 2.5px solid var(--brand); animation: pulse 1.9s ease-out infinite;
+}
+@keyframes pulse {
+  0%   { transform: scale(1);    opacity: .95; }
+  70%  { transform: scale(1.14); opacity: 0; }
+  100% { transform: scale(1.14); opacity: 0; }
+}
+
+/* ----------------------------------------------------------- tooltip */
+.tip {
+  position: absolute; z-index: 6; width: min(330px, 62%);
+  background: var(--surface); color: var(--ink);
+  border: 1px solid var(--line); border-radius: 10px;
+  box-shadow: 0 14px 40px rgba(0,0,0,.3);
+  padding: 15px 16px 14px;
+  transition: top .3s cubic-bezier(.4,0,.2,1), left .3s cubic-bezier(.4,0,.2,1);
+}
+.tip.card {
+  /* Caption beat: no target to point at. Sit in the lower third rather than
+     dead centre, so the screen being described stays readable behind it. */
+  position: absolute; left: 24px; right: auto; bottom: 24px; top: auto; transform: none;
+  width: min(460px, 60%); padding: 18px 20px;
+}
+.eyebrow {
+  font-family: var(--mono); font-size: 10px; letter-spacing: .13em; text-transform: uppercase;
+  color: var(--muted); display: flex; align-items: center; gap: 8px; margin-bottom: 7px;
+}
+.who { font-weight: 600; }
+.who[data-p="rebecca"] { color: var(--client); }
+.who[data-p="cse"] { color: var(--tmf); }
+.who[data-p="pm"] { color: var(--admin); }
+.tip h2 {
+  font-family: var(--display); font-weight: 700; font-size: 17px; line-height: 1.25;
+  margin: 0 0 6px; text-wrap: balance;
+}
+.tip.card h2 { font-size: 19px; }
+.tip p { margin: 0; font-size: 13.5px; line-height: 1.52; color: var(--ink); }
+.tip.card p { font-size: 14px; }
+.say {
+  margin-top: 11px; padding: 9px 11px; border-radius: 7px;
+  background: var(--sunk); border-left: 3px solid var(--brand);
+  font-size: 12.5px; line-height: 1.45; color: var(--ink);
+}
+.say b {
+  display: block; font-family: var(--mono); font-size: 9.5px; letter-spacing: .13em;
+  text-transform: uppercase; color: var(--muted); margin-bottom: 3px; font-weight: 500;
+}
+.tipnav { display: flex; align-items: center; gap: 8px; margin-top: 13px; }
+.next {
+  background: var(--brand); color: var(--on-brand); border: 0; border-radius: 6px;
+  height: 32px; padding: 0 13px; font-weight: 600; font-size: 13px;
+}
+.next:hover { background: var(--brand-deep); }
+.hint { font-family: var(--mono); font-size: 10.5px; color: var(--muted); }
+body.nopanel .tip { opacity: 0; pointer-events: none; }
+
+/* ----------------------------------------------------------- chapters */
+.rail {
+  position: fixed; top: calc(var(--bar) + env(safe-area-inset-top, 0px)); bottom: 0; left: 0;
+  width: 290px; max-width: 84vw; z-index: 45;
+  background: var(--surface); border-right: 1px solid var(--line);
+  padding: 14px; overflow-y: auto;
+  transform: translateX(-102%); transition: transform .26s ease;
+}
+.rail[data-open="true"] { transform: none; }
+.rail h3 {
+  font-family: var(--mono); font-size: 10px; letter-spacing: .14em; text-transform: uppercase;
+  color: var(--muted); margin: 0 0 10px; font-weight: 500;
+}
+.chap {
+  display: flex; gap: 11px; align-items: baseline; width: 100%; text-align: left;
+  background: none; border: 0; border-radius: 7px; padding: 9px 10px; margin-bottom: 2px;
+}
+.chap:hover { background: var(--sunk); }
+.chap[aria-current="true"] { background: var(--sunk); }
+.chap[aria-current="true"] .cn { color: var(--brand); }
+.cn { font-family: var(--mono); font-size: 11px; color: var(--muted); flex: none; width: 18px; font-variant-numeric: tabular-nums; }
+.ct { font-size: 13.5px; font-weight: 500; line-height: 1.3; }
+.cc { font-family: var(--mono); font-size: 10.5px; color: var(--muted); margin-left: auto; flex: none; }
+
+/* ----------------------------------------------------------- overlays */
+.sheet {
+  position: fixed; inset: 0; z-index: 60; background: var(--paper);
+  display: grid; place-items: center; padding: 28px 20px;
+  overflow-y: auto;
+}
+.sheetin { width: min(760px, 100%); }
+.kicker {
+  font-family: var(--mono); font-size: 11px; letter-spacing: .18em; text-transform: uppercase;
+  color: var(--brand); margin-bottom: 14px;
+}
+.sheet h1 {
+  font-family: var(--display); font-weight: 800; font-size: clamp(30px, 6vw, 52px);
+  line-height: 1.02; margin: 0 0 12px; letter-spacing: -.02em; text-wrap: balance;
+}
+.lede { font-size: clamp(15px, 2.2vw, 18px); color: var(--muted); margin: 0 0 24px; max-width: 54ch; }
+.toc { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 1px; background: var(--line); border: 1px solid var(--line); border-radius: 9px; overflow: hidden; margin-bottom: 26px; }
+.toc div { background: var(--surface); padding: 11px 13px; }
+.toc b { display: block; font-size: 13px; font-weight: 600; }
+.toc span { font-family: var(--mono); font-size: 10.5px; color: var(--muted); }
+.cta {
+  background: var(--brand); color: var(--on-brand); border: 0; border-radius: 8px;
+  height: 46px; padding: 0 24px; font-weight: 700; font-size: 15px;
+  font-family: var(--display); letter-spacing: .01em;
+}
+.cta:hover { background: var(--brand-deep); }
+.meta { margin-top: 18px; font-family: var(--mono); font-size: 11px; color: var(--muted); line-height: 1.7; }
+
+@media (max-width: 760px) {
+  :root { --bar: 50px; }
+  /* The tooltip docks over the bottom of the screen, so reserve that space
+     and centre the frame in what is left rather than stranding it at the top. */
+  .stage { padding: 10px 10px 44svh; align-content: center; }
+  .frame { border-radius: 7px; }
+  /* The tooltip stops chasing the hotspot and docks, so it never covers it. */
+  .tip, .tip.card {
+    position: fixed; left: 0; right: 0; bottom: 0; top: auto; transform: none;
+    width: 100%; max-width: 100%; border-radius: 13px 13px 0 0;
+    border-left: 0; border-right: 0; border-bottom: 0;
+    padding: 14px 16px calc(14px + env(safe-area-inset-bottom, 0px));
+    max-height: 56svh; overflow-y: auto;
+  }
+  .where span { display: none; }
+  /* Seven controls do not fit across a phone. The presenter toggles are for
+     whoever is driving on a laptop, so drop them here and keep the row from
+     running off the right edge. */
+  .bar { gap: 8px; padding-left: 10px; padding-right: 10px; }
+  #focus, #panel { display: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  * { animation-duration: .001ms !important; transition-duration: .001ms !important; }
+  .hot::after { animation: none; opacity: .95; }
+}
+</style>
+
+<div class="progress" id="prog" style="width:0"></div>
+
+<header class="bar">
+  <span class="mark">JH&amp;P</span>
+  <button class="btn icon" id="chapBtn" aria-pressed="false" aria-label="Chapters" title="Chapters (C)">☰</button>
+  <div class="where">
+    <b id="wTitle">Walkthrough</b>
+    <span id="wChap">Client onboarding</span>
+  </div>
+  <div class="spacer"></div>
+  <span class="count" id="count">—</span>
+  <button class="btn icon" id="prev" aria-label="Previous step" title="Previous (←)">‹</button>
+  <button class="btn icon" id="next" aria-label="Next step" title="Next (→)">›</button>
+  <button class="btn icon" id="focus" aria-pressed="true" aria-label="Toggle focus dimming" title="Dim around the hotspot (F)">◎</button>
+  <button class="btn icon" id="panel" aria-pressed="true" aria-label="Show or hide the panel" title="Hide the panel (H)">▤</button>
+  <button class="btn icon" id="theme" aria-label="Switch theme" title="Theme">◐</button>
+</header>
+
+<nav class="rail" id="rail" data-open="false" aria-label="Chapters">
+  <h3>Chapters</h3>
+  <div id="chapList"></div>
+</nav>
+
+<main class="stage">
+  <div class="frame" id="frame">
+    <img id="shot" alt="">
+    <div class="spot" id="spot" hidden></div>
+    <button class="hot" id="hot" hidden aria-label="Continue"></button>
+    <div class="tip" id="tip" role="status" aria-live="polite">
+      <div class="eyebrow"><span class="who" id="tWho"></span><span id="tAct"></span></div>
+      <h2 id="tTitle"></h2>
+      <p id="tBody"></p>
+      <div class="say" id="tSay" hidden><b>Say</b><span id="tSayText"></span></div>
+      <div class="tipnav">
+        <button class="next" id="tNext">Next</button>
+        <span class="hint">→ or Space</span>
+      </div>
+    </div>
+  </div>
+</main>
+
+<section class="sheet" id="cover">
+  <div class="sheetin">
+    <div class="kicker">Interactive walkthrough · captured from the live environment</div>
+    <h1 id="cvTitle">JH&amp;P AI-Embedded Client Onboarding</h1>
+    <p class="lede" id="cvLede"></p>
+    <div class="toc" id="cvToc"></div>
+    <button class="cta" id="start">Start the walkthrough</button>
+    <div class="meta" id="cvMeta"></div>
+  </div>
+</section>
+
+<section class="sheet" id="end" hidden>
+  <div class="sheetin">
+    <div class="kicker">End of walkthrough</div>
+    <h1>From a 44-page form to accounts opened, on one platform</h1>
+    <p class="lede">Every screen in this walkthrough is the running application: the client answered online, DocCenter read the evidence, an AI agent advised on the screening match and a person decided, and the portfolio manager's approval wrote back to Pulse, Symphony and Xplan. All of it is built, and changed, in Appian.</p>
+    <div class="toc" id="endToc"></div>
+    <button class="cta" id="restart">Start again</button>
+    <div class="meta" id="endMeta"></div>
+  </div>
+</section>
+
+<script id="data" type="application/json">__STEPS_JSON__</script>
+
+<script>
+(function () {
+  'use strict';
+  var DATA = JSON.parse(document.getElementById('data').textContent);
+  var STEPS = DATA.steps, CHAPS = DATA.chapters, N = STEPS.length;
+  var i = 0, started = false;
+
+  var $ = function (id) { return document.getElementById(id); };
+  var shot = $('shot'), spot = $('spot'), hot = $('hot'),
+      tip = $('tip'), frame = $('frame'), rail = $('rail');
+
+  var PERSONA = { rebecca: 'Rebecca · client', cse: 'Client service executive',
+                  pm: 'James · portfolio manager' };
+
+  /* ---- theme: remembered per viewer, harmless if storage is unavailable ---- */
+  try {
+    var saved = localStorage.getItem('jhp-theme');
+    if (saved) document.documentElement.setAttribute('data-theme', saved);
+  } catch (e) {}
+  $('theme').addEventListener('click', function () {
+    var cur = document.documentElement.getAttribute('data-theme');
+    var isDark = cur ? cur === 'dark'
+      : window.matchMedia('(prefers-color-scheme: dark)').matches;
+    var nextTheme = isDark ? 'light' : 'dark';
+    document.documentElement.setAttribute('data-theme', nextTheme);
+    try { localStorage.setItem('jhp-theme', nextTheme); } catch (e) {}
+  });
+
+  /* ---- presenter toggles ---- */
+  function setFlag(cls, on, btn, key) {
+    document.body.classList.toggle(cls, !on);
+    $(btn).setAttribute('aria-pressed', on ? 'true' : 'false');
+    try { localStorage.setItem(key, on ? '1' : '0'); } catch (e) {}
+  }
+  var dimOn = true, panelOn = true;
+  try {
+    if (localStorage.getItem('jhp-dim') === '0') dimOn = false;
+    if (localStorage.getItem('jhp-panel') === '0') panelOn = false;
+  } catch (e) {}
+  setFlag('nodim', dimOn, 'focus', 'jhp-dim');
+  setFlag('nopanel', panelOn, 'panel', 'jhp-panel');
+  $('focus').addEventListener('click', function () { dimOn = !dimOn; setFlag('nodim', dimOn, 'focus', 'jhp-dim'); });
+  $('panel').addEventListener('click', function () { panelOn = !panelOn; setFlag('nopanel', panelOn, 'panel', 'jhp-panel'); });
+
+  /* ---- cover ---- */
+  $('cvTitle').textContent = DATA.title;
+  $('cvLede').textContent = DATA.subtitle + '. ' + N +
+    ' steps across ' + CHAPS.length + ' chapters, every screen captured from the running application.';
+  $('cvMeta').innerHTML = 'Captured ' + DATA.captured +
+    ' · cms-2.appiancloud.com<br>Click the pulsing marker, or use → ← and Space.<br>C for chapters · F for focus dimming · H to hide the panel.';
+  function tocHtml() {
+    return CHAPS.map(function (c, n) {
+      return '<div><b>' + (n + 1) + '. ' + esc(c.name) + '</b><span>' + c.count + ' steps</span></div>';
+    }).join('');
+  }
+  $('cvToc').innerHTML = tocHtml();
+  $('endToc').innerHTML = tocHtml();
+  $('endMeta').textContent = 'JH&P AI-Embedded Client Onboarding · built on Appian · ' + DATA.captured;
+
+  function esc(s) {
+    return String(s).replace(/[&<>"]/g, function (c) {
+      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c];
+    });
+  }
+
+  /* ---- chapter rail ---- */
+  CHAPS.forEach(function (c, n) {
+    var b = document.createElement('button');
+    b.className = 'chap';
+    b.innerHTML = '<span class="cn">' + String(n + 1).padStart(2, '0') + '</span>' +
+                  '<span class="ct">' + esc(c.name) + '</span>' +
+                  '<span class="cc">' + c.count + '</span>';
+    b.addEventListener('click', function () { go(c.from - 1); setRail(false); });
+    b.dataset.from = c.from;
+    $('chapList').appendChild(b);
+  });
+  function setRail(open) {
+    rail.dataset.open = open ? 'true' : 'false';
+    $('chapBtn').setAttribute('aria-pressed', open ? 'true' : 'false');
+  }
+  $('chapBtn').addEventListener('click', function () {
+    setRail(rail.dataset.open !== 'true');
+  });
+
+  /* ---- placing the panel ---- */
+  function place(t) {
+    if (window.innerWidth <= 760) { tip.style.cssText = ''; return; }
+    var fw = frame.clientWidth, fh = frame.clientHeight;
+    var tw = tip.offsetWidth, th = tip.offsetHeight, gap = 18, edge = 16;
+    var tx = t.x / 100 * fw, ty = t.y / 100 * fh;
+    var tWd = t.w / 100 * fw, tHt = t.h / 100 * fh;
+    var cx = tx + tWd / 2, cy = ty + tHt / 2;
+    var clamp = function (v, lo, hi) { return Math.min(Math.max(v, lo), hi); };
+
+    var below = ty + tHt + gap, above = ty - th - gap;
+    var right = tx + tWd + gap, left = tx - tw - gap;
+    var pos = null;
+    // A wide target centred under it would put the panel straight over the
+    // content the step is describing. Hug the nearer frame edge instead, so
+    // the other side of the screen stays readable.
+    var wide = tWd > fw * 0.35;
+    var lx = wide
+      ? (cx > fw / 2 ? fw - tw - edge : edge)
+      : clamp(cx - tw / 2, edge, fw - tw - edge);
+    var vmid = clamp(cy - th / 2, edge, fh - th - edge);
+    // Order of preference depends on the shape of the target. A narrow target
+    // is almost always a control inside a card, and the rest of that card sits
+    // directly below it — so go beside it and leave the column intact. A wide
+    // target spans the screen, so no side fits and below/above is the only
+    // honest choice.
+    var order = wide
+      ? [[below + th <= fh - edge, lx, below], [above >= edge, lx, above],
+         [right + tw <= fw - edge, right, vmid], [left >= edge, left, vmid]]
+      : [[right + tw <= fw - edge, right, vmid], [left >= edge, left, vmid],
+         [below + th <= fh - edge, lx, below], [above >= edge, lx, above]];
+    for (var k = 0; k < order.length && !pos; k++) {
+      if (order[k][0]) pos = { l: order[k][1], t: order[k][2] };
+    }
+    if (!pos) {
+      // Nothing fits cleanly: take the roomier side and keep off the hotspot.
+      pos = (fw - (tx + tWd)) > tx
+        ? { l: fw - tw - edge, t: clamp(cy - th / 2, edge, fh - th - edge) }
+        : { l: edge,           t: clamp(cy - th / 2, edge, fh - th - edge) };
+    }
+    tip.style.left = Math.round(pos.l) + 'px';
+    tip.style.top = Math.round(pos.t) + 'px';
+    tip.style.right = 'auto';
+    tip.style.bottom = 'auto';
+    tip.style.transform = 'none';
+  }
+
+  /* ---- render ---- */
+  function render() {
+    var s = STEPS[i];
+    shot.src = s.shot;
+    shot.alt = s.title + ' — ' + s.chapter;
+
+    $('wTitle').textContent = s.title;
+    $('wChap').textContent = s.chapter;
+    $('count').textContent = (i + 1) + ' / ' + N;
+    $('prog').style.width = ((i + 1) / N * 100) + '%';
+
+    $('tWho').textContent = PERSONA[s.persona] || '';
+    $('tWho').dataset.p = s.persona || '';
+    $('tAct').textContent = s.action === 'click' ? '· click'
+      : s.action === 'type' ? '· type' : '';
+    $('tTitle').textContent = s.title;
+    $('tBody').textContent = s.body;
+    if (s.say) { $('tSayText').textContent = s.say; $('tSay').hidden = false; }
+    else { $('tSay').hidden = true; }
+
+    var t = s.target;
+    if (t) {
+      tip.classList.remove('card');
+      spot.hidden = false; hot.hidden = false;
+      spot.classList.toggle('point', s.action === 'none');
+      // Some targets are thin labels. Pad the marker outwards around the same
+      // centre so it reads as a marker, without shifting what it points at.
+      var MIN_W = 2.6, MIN_H = 2.6;
+      var dw = Math.max(0, MIN_W - t.w) / 2, dh = Math.max(0, MIN_H - t.h) / 2;
+      var bx = Math.max(0, t.x - dw), by = Math.max(0, t.y - dh);
+      var bw = Math.min(100 - bx, t.w + dw * 2), bh = Math.min(100 - by, t.h + dh * 2);
+      var css = 'left:' + bx + '%;top:' + by + '%;width:' + bw + '%;height:' + bh + '%';
+      spot.style.cssText = css;
+      hot.style.cssText = css;
+      place(t);
+    } else {
+      tip.classList.add('card');
+      spot.hidden = true; hot.hidden = true;
+      tip.style.cssText = '';
+    }
+
+    // Keep the next two frames warm so advancing never shows a blank stage.
+    [1, 2].forEach(function (d) {
+      if (STEPS[i + d]) { var im = new Image(); im.src = STEPS[i + d].shot; }
+    });
+
+    var cur = null;
+    CHAPS.forEach(function (c) { if (c.from <= i + 1) cur = c.name; });
+    [].forEach.call($('chapList').children, function (b, n) {
+      b.setAttribute('aria-current', CHAPS[n].name === cur ? 'true' : 'false');
+    });
+  }
+
+  function go(n) {
+    if (n < 0) return;
+    if (n >= N) { $('end').hidden = false; return; }
+    i = n; render();
+    // Keep the address bar on the current step so any screen can be linked to.
+    // replaceState, not pushState: stepping through 86 steps should not leave
+    // 86 entries in the back button.
+    if (started) {
+      try { history.replaceState(null, '', '#s=' + (i + 1)); } catch (e) {}
+    }
+  }
+
+  /* ---- deep links ----------------------------------------------------
+     #s=44 opens at step 44, #c=4 at the start of chapter 4. Either skips
+     the cover, because a link that names a step means to go there. No hash
+     (the embedded copy, or a plain visit) behaves exactly as before. */
+  function fromHash() {
+    var h = (location.hash || '').replace(/^#/, '');
+    if (!h) return -1;
+    var m = /^s=(\d+)$/.exec(h);
+    if (m) { var n = parseInt(m[1], 10); return (n >= 1 && n <= N) ? n - 1 : -1; }
+    m = /^c=(\d+)$/.exec(h);
+    if (m) { var c = CHAPS[parseInt(m[1], 10) - 1]; return c ? c.from - 1 : -1; }
+    return -1;
+  }
+  function openAt(n) {
+    $('cover').hidden = true; $('end').hidden = true; started = true; go(n);
+  }
+  window.addEventListener('hashchange', function () {
+    var n = fromHash();
+    if (n >= 0 && n !== i) openAt(n);
+  });
+  function advance() { go(i + 1); }
+  function back() {
+    if ($('end').hidden === false) { $('end').hidden = true; return; }
+    go(i - 1);
+  }
+
+  hot.addEventListener('click', advance);
+  $('tNext').addEventListener('click', advance);
+  $('next').addEventListener('click', advance);
+  $('prev').addEventListener('click', back);
+
+  $('start').addEventListener('click', function () {
+    $('cover').hidden = true; started = true; render();
+  });
+  $('restart').addEventListener('click', function () {
+    $('end').hidden = true; $('cover').hidden = true; started = true; go(0);
+  });
+
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'c' || e.key === 'C') { setRail(rail.dataset.open !== 'true'); return; }
+    if (e.key === 'f' || e.key === 'F') { dimOn = !dimOn; setFlag('nodim', dimOn, 'focus', 'jhp-dim'); return; }
+    if (e.key === 'h' || e.key === 'H') { panelOn = !panelOn; setFlag('nopanel', panelOn, 'panel', 'jhp-panel'); return; }
+    if (e.key === 'Escape') { setRail(false); return; }
+    if (!started) {
+      if (e.key === 'Enter' || e.key === ' ' || e.key === 'ArrowRight') {
+        e.preventDefault(); $('start').click();
+      }
+      return;
+    }
+    if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') { e.preventDefault(); advance(); }
+    else if (e.key === 'ArrowLeft' || e.key === 'PageUp') { e.preventDefault(); back(); }
+    else if (e.key === 'Home') { go(0); }
+    else if (e.key === 'End') { go(N - 1); }
+  });
+
+  window.addEventListener('resize', function () {
+    if (started && STEPS[i] && STEPS[i].target) place(STEPS[i].target);
+  });
+
+  var deep = fromHash();
+  if (deep >= 0) openAt(deep); else render();
+})();
+</script>

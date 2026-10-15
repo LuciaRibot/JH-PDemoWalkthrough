@@ -1,0 +1,323 @@
+{
+ "logo": "/Users/lucia.ribot/Desktop/jhp-demo-clickthrough/deck/jhp-logo.png",
+ "slides": [
+  {
+   "kind": "cover",
+   "title": "JH&P AI-Embedded\nClient Onboarding\nDemo Takeaway",
+   "people": "Lucia Ribot | Solution Consultant | lucia.ribot@appian.com",
+   "date": "October 2026"
+  },
+  {
+   "kind": "table",
+   "title": "James Hambro & Partners | RFI requirements shown in the demo",
+   "header": [
+    "RFI area",
+    "What the demo showed",
+    "Where"
+   ],
+   "widths": [
+    0.24,
+    0.56,
+    0.2
+   ],
+   "rows": [
+    [
+     "4.1 Client experience",
+     "Branded client portal replacing the 44-page form: six tailored sections, save-and-resume, validation and dynamic questions",
+     "JH&P Portal"
+    ],
+    [
+     "4.2 Integration and data",
+     "Pre-population from Xplan, Companies House lookup, write-back to Pulse, Symphony and Xplan on approval, sync status per system",
+     "Portal, Onboarding, Portfolio"
+    ],
+    [
+     "4.3 Workflow and configurability",
+     "Guidance, tooltips, options, thresholds and risk weights changed by the business with no release",
+     "Onboarding \u00b7 Settings"
+    ],
+    [
+     "4.4 Operational efficiency",
+     "Live queue with SLA warnings, items that need a person, guarded send for approval",
+     "Onboarding"
+    ],
+    [
+     "4.5 KYC/AML and access",
+     "Screening provider check, AI recommendation, human decision, four-eyes approval, masked identifiers by role",
+     "Onboarding \u00b7 Portfolio"
+    ],
+    [
+     "4.6 Document processing",
+     "Appian DocCenter extraction and reconciliation; AI-raised mismatch against the declared value",
+     "Onboarding"
+    ],
+    [
+     "4.7 AI and agents",
+     "Client onboarding assistant, case assistant and screening agent (Appian AI agents), AI-drafted case summary",
+     "All three sites"
+    ],
+    [
+     "4.8 Reporting and MI",
+     "Live onboarding performance, back-office sync health and where AI is used and checked",
+     "Onboarding \u00b7 Reports"
+    ],
+    [
+     "4.9 Multi-party",
+     "Joint applicant, company directors and advisers, each completing their own part in parallel",
+     "Portal, Onboarding"
+    ],
+    [
+     "4.10 Communication",
+     "Secure messages, handoff from the assistant to a person, client told when accounts open",
+     "Portal, Onboarding"
+    ]
+   ]
+  },
+  {
+   "kind": "divider",
+   "number": "01",
+   "title": "Client Application Journey",
+   "description": "Rebecca Hartley-Vance completes her application on the JH&P Portal: tailored sections, validation, a joint applicant and the family company, source of wealth, the in-line AI assistant, evidence upload and signing."
+  },
+  {
+   "kind": "shot",
+   "image": "/Users/lucia.ribot/Desktop/jhp-demo-clickthrough/docs/shots/100.jpg",
+   "title": "Client portal home",
+   "subtitle": "Progress, team and what happens next",
+   "callout": "As a client, I want to see where my application stands and who is looking after me, so that I never have to chase JH&P for an update.",
+   "side": "left",
+   "y": 2500000
+  },
+  {
+   "kind": "shot",
+   "image": "/Users/lucia.ribot/Desktop/jhp-demo-clickthrough/docs/shots/103.jpg",
+   "title": "Validated as she types",
+   "subtitle": "About you",
+   "callout": "As a client, I want mistakes caught while I type, so that my application is not sent back to me later.",
+   "side": "right",
+   "y": 2500000
+  },
+  {
+   "kind": "shot",
+   "image": "/Users/lucia.ribot/Desktop/jhp-demo-clickthrough/docs/shots/107.jpg",
+   "title": "Joint applicant",
+   "subtitle": "Parties complete their own part in parallel",
+   "callout": "As a client opening a joint account, I want Edward to complete his own section on his own link, so that I am not held up while he is travelling.",
+   "side": "right",
+   "y": 2500000
+  },
+  {
+   "kind": "shot",
+   "image": "/Users/lucia.ribot/Desktop/jhp-demo-clickthrough/docs/shots/109.jpg",
+   "title": "The family company",
+   "subtitle": "Checked against Companies House",
+   "callout": "As a client service executive, I want company details confirmed against Companies House, so that nobody rekeys them.",
+   "side": "right",
+   "y": 2500000
+  },
+  {
+   "kind": "shot",
+   "image": "/Users/lucia.ribot/Desktop/jhp-demo-clickthrough/docs/shots/112.jpg",
+   "title": "Accounts and objectives",
+   "subtitle": "Pre-filled from the first meeting"
+  },
+  {
+   "kind": "shot",
+   "image": "/Users/lucia.ribot/Desktop/jhp-demo-clickthrough/docs/shots/152.jpg",
+   "title": "Onboarding assistant",
+   "subtitle": "Appian AI agent, scoped to the section",
+   "callout": "As a client, I want to ask what a question means without leaving the form, so that I can finish in one sitting. The assistant answers only from JH&P guidance, cannot give advice and hands off to a person.",
+   "side": "left",
+   "y": 2200000
+  },
+  {
+   "kind": "shot",
+   "image": "/Users/lucia.ribot/Desktop/jhp-demo-clickthrough/docs/shots/117.jpg",
+   "title": "Evidence upload",
+   "subtitle": "Completion statement received and sent to DocCenter",
+   "callout": "As a client, I want to upload one document and carry on, so that I am not waiting for it to be checked.",
+   "side": "left",
+   "y": 2500000
+  },
+  {
+   "kind": "shot",
+   "image": "/Users/lucia.ribot/Desktop/jhp-demo-clickthrough/docs/shots/120.jpg",
+   "title": "Identity checks and signatures",
+   "subtitle": "Three agreements signed online"
+  },
+  {
+   "kind": "divider",
+   "number": "02",
+   "title": "The Onboarding Team",
+   "description": "The client service executive picks up the submission: the live queue, plain-English questions to the case assistant, and the full case in one place."
+  },
+  {
+   "kind": "shot",
+   "image": "/Users/lucia.ribot/Desktop/jhp-demo-clickthrough/docs/shots/200.jpg",
+   "title": "Onboarding queue",
+   "subtitle": "New submissions, SLA warnings and what needs a person",
+   "callout": "As a client service executive, I want my day laid out for me, so that late cases and new submissions are never missed.",
+   "side": "right",
+   "y": 2500000
+  },
+  {
+   "kind": "shot",
+   "image": "/Users/lucia.ribot/Desktop/jhp-demo-clickthrough/docs/shots/203.jpg",
+   "title": "Case assistant",
+   "subtitle": "Plain-English questions about live cases",
+   "callout": "As a client service executive, I want to ask which cases are late and what is outstanding, so that I do not have to build a report to find out.",
+   "side": "left",
+   "y": 2300000
+  },
+  {
+   "kind": "shot",
+   "image": "/Users/lucia.ribot/Desktop/jhp-demo-clickthrough/docs/shots/206.jpg",
+   "title": "Application tab",
+   "subtitle": "Everything the client gave, read-only, beside the evidence"
+  },
+  {
+   "kind": "shot",
+   "image": "/Users/lucia.ribot/Desktop/jhp-demo-clickthrough/docs/shots/209.jpg",
+   "title": "Case overview",
+   "subtitle": "Outstanding items with owner, due date and action"
+  },
+  {
+   "kind": "shot",
+   "image": "/Users/lucia.ribot/Desktop/jhp-demo-clickthrough/docs/shots/212.jpg",
+   "title": "Parties",
+   "subtitle": "Multi-party onboarding with screening and invite status"
+  },
+  {
+   "kind": "divider",
+   "number": "03",
+   "title": "KYC and Screening",
+   "description": "A possible PEP match on a director: provider check, the screening agent's recommendation and a human decision with four-eyes approval."
+  },
+  {
+   "kind": "shot",
+   "image": "/Users/lucia.ribot/Desktop/jhp-demo-clickthrough/docs/shots/305.jpg",
+   "title": "Identifier comparison",
+   "subtitle": "What we hold against the provider record"
+  },
+  {
+   "kind": "shot",
+   "image": "/Users/lucia.ribot/Desktop/jhp-demo-clickthrough/docs/shots/306.jpg",
+   "title": "Screening agent",
+   "subtitle": "The agent advises; a person decides",
+   "callout": "As a compliance-minded CSE, I want the AI to compare every identifier and explain its recommendation, so that I decide faster without handing the decision to a machine.",
+   "side": "right",
+   "y": 2500000
+  },
+  {
+   "kind": "shot",
+   "image": "/Users/lucia.ribot/Desktop/jhp-demo-clickthrough/docs/shots/310.jpg",
+   "title": "Match confirmation",
+   "subtitle": "Decision, reasoning and confirmation, all required"
+  },
+  {
+   "kind": "shot",
+   "image": "/Users/lucia.ribot/Desktop/jhp-demo-clickthrough/docs/shots/312.jpg",
+   "title": "Second approval",
+   "subtitle": "Head of Compliance emailed for four-eyes approval",
+   "callout": "As Head of Compliance, I want every screening decision countersigned by a second person, so that segregation of duties is enforced, not assumed.",
+   "side": "right",
+   "y": 2500000
+  },
+  {
+   "kind": "divider",
+   "number": "04",
+   "title": "Document Intelligence",
+   "description": "Appian DocCenter reads the completion statement, the team reconciles the fields, and a mismatch with the declared value is raised automatically."
+  },
+  {
+   "kind": "shot",
+   "image": "/Users/lucia.ribot/Desktop/jhp-demo-clickthrough/docs/shots/402.jpg",
+   "title": "DocCenter reconcile",
+   "subtitle": "32 fields extracted, side by side with the document",
+   "callout": "As a client service executive, I want extracted values beside the document with their confidence, so that I check rather than retype.",
+   "side": "right",
+   "y": 2500000
+  },
+  {
+   "kind": "shot",
+   "image": "/Users/lucia.ribot/Desktop/jhp-demo-clickthrough/docs/shots/405.jpg",
+   "title": "Mismatch raised by AI",
+   "subtitle": "Net proceeds 6.3% below the declared value"
+  },
+  {
+   "kind": "shot",
+   "image": "/Users/lucia.ribot/Desktop/jhp-demo-clickthrough/docs/shots/406.jpg",
+   "title": "Review the evidence",
+   "subtitle": "Document beside the decision"
+  },
+  {
+   "kind": "divider",
+   "number": "05",
+   "title": "Approval and Accounts Opened",
+   "description": "The case goes to James Horniman on the JH&P Portfolio site. One approval writes back to Pulse, Symphony and Xplan and tells the client."
+  },
+  {
+   "kind": "shot",
+   "image": "/Users/lucia.ribot/Desktop/jhp-demo-clickthrough/docs/shots/417.jpg",
+   "title": "Ready for approval",
+   "subtitle": "Guarded send, AI-drafted case summary"
+  },
+  {
+   "kind": "shot",
+   "image": "/Users/lucia.ribot/Desktop/jhp-demo-clickthrough/docs/shots/419.jpg",
+   "title": "Audit trail",
+   "subtitle": "People, services and AI, with reasoning"
+  },
+  {
+   "kind": "shot",
+   "image": "/Users/lucia.ribot/Desktop/jhp-demo-clickthrough/docs/shots/501.jpg",
+   "title": "Portfolio manager approval",
+   "subtitle": "JH&P Portfolio site: summary, masked identifiers and computed checks",
+   "callout": "As a portfolio manager, I want the case summarised and every check worked out for me, so that I can approve with confidence in minutes.",
+   "side": "left",
+   "y": 2300000
+  },
+  {
+   "kind": "shot",
+   "image": "/Users/lucia.ribot/Desktop/jhp-demo-clickthrough/docs/shots/505.jpg",
+   "title": "Approved",
+   "subtitle": "Accounts created in Pulse, portfolio in Symphony, Xplan updated"
+  },
+  {
+   "kind": "shot",
+   "image": "/Users/lucia.ribot/Desktop/jhp-demo-clickthrough/docs/shots/600.jpg",
+   "title": "Client informed",
+   "subtitle": "Rebecca sees her accounts open"
+  },
+  {
+   "kind": "divider",
+   "number": "06",
+   "title": "Reporting and Configuration",
+   "description": "Live onboarding MI, and the settings the business changes itself with no release."
+  },
+  {
+   "kind": "shot",
+   "image": "/Users/lucia.ribot/Desktop/jhp-demo-clickthrough/docs/shots/700.jpg",
+   "title": "Onboarding performance",
+   "subtitle": "Computed live from the case records"
+  },
+  {
+   "kind": "shot",
+   "image": "/Users/lucia.ribot/Desktop/jhp-demo-clickthrough/docs/shots/701.jpg",
+   "title": "Sync health and AI use",
+   "subtitle": "Where work waits and where AI is used and checked"
+  },
+  {
+   "kind": "shot",
+   "image": "/Users/lucia.ribot/Desktop/jhp-demo-clickthrough/docs/shots/702.jpg",
+   "title": "Journey settings",
+   "subtitle": "Changed by the business, with no release",
+   "callout": "As an onboarding lead, I want to change guidance, options and thresholds myself, so that the journey keeps up with the business without a project.",
+   "side": "right",
+   "y": 2500000
+  },
+  {
+   "kind": "thanks"
+  }
+ ]
+}

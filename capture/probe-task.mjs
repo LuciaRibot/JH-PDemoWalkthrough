@@ -1,0 +1,12 @@
+import { chromium } from 'playwright';
+import { settle, SITES } from './lib.mjs';
+const b = await chromium.connectOverCDP('http://127.0.0.1:9333');
+const p = await b.contexts()[0].newPage(); await p.bringToFront(); await p.setViewportSize({ width: 1440, height: 810 });
+await p.goto(SITES.staff); await settle(p, 4000);
+await p.getByText('Hartley-Vance family', { exact: true }).first().click(); await settle(p, 3500);
+await p.getByText('Reconcile in DocCenter', { exact: true }).first().click(); await settle(p, 8000);
+console.log(p.url());
+const items = await p.evaluate(() => [...document.querySelectorAll('button,a,[role=tab],[role=button]')].filter(e => e.offsetParent && (e.innerText||'').trim()).map(e => e.tagName[0] + ':' + e.innerText.trim().replace(/\s+/g,' ').slice(0,50)));
+console.log([...new Set(items)].join(' | '));
+await p.screenshot({ path: '../recon/task1.png' });
+process.exit(0);
